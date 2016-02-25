@@ -93,13 +93,15 @@
   ec2_asg:
     name: "{{ vpc_name }}"
     region: "{{ vpc_region }}"
-    launch_config_name: "{{ vpc_sg_name }}"
+    launch_config_name: "{{ vpc_name }}"
     health_check_period: 60
-    health_check_type: ELB
+    health_check_type: EC2
     min_size: 2
     max_size: 2
     wait_for_instances: no
     desired_capacity: 2
+    tags:
+      - Name: "{{ vpc_name }}-host"
     vpc_zone_identifier:
       - "{{ az0_subnet.subnet.id }}"
       - "{{ az1_subnet.subnet.id }}"
