@@ -1,0 +1,13 @@
+---
+vpc_name: Sanctuary
+vpc_sg_name: Sanctuary
+vpc_region: us-west-2
+vpc_nat_instance_size: m1.small
+vpc_nat_image: ami-49691279
+vpc_ip_root: 10.0
+vpc_az1: us-west-2a
+vpc_az2: us-west-2b
+vpc_key_name: sanctuary_deployer
+az1_subnet_range: 1.0
+az2_subnet_range: 2.0
+

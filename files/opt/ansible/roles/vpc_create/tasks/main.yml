@@ -1,0 +1,51 @@
+---
+- name: Create / Ensure ec2 key
+  ec2_key:
+    name: {{ vpc_key_name }}
+
+- name:
+  local_action:
+    module: ec2_vpc
+    region: "{{ region }}"
+    cidr_block: "{{ vpc_ip_root }}.0.0/16"
+    resource_tags:
+      Name: {{ vpc_name }}
+    internet_gateway: yes
+  register: vpc
+
+- name: Create subnet in {{ vpc_az1 }} for sanctuary hosts
+  ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpc.vpc_id }}"
+    cidr: "{{ vpc_ip_root }}.{{ az1_subnet_range}}/16"
+    resource_tags:
+      Name: Sanctuary
+  register: sanctuary_az1
+
+- name: Create subnet in {{ vpc_az2 }} for sanctuary hosts
+  ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpc.vpc_id }}"
+    cidr: "{{ vpc_ip_root }}.{{ az2_subnet_range}}/16"
+    resource_tags:
+      Name: Sanctuary
+  register: sanctuary_az2
+
+- name: Create a empty security group
+  local_action:
+    module: ec2_group
+    region: "{{ region }}"
+    vpc_id: "{{ vpc.vpc_id }}"
+    name: "{{ vpc_sg_name }}"
+    description: "{{ vpc_sg_name }}"
+    rules:
+      - proto: tcp
+        from_port: 8200
+        to_port: 8200
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+  register: sanctuary_sg
+
