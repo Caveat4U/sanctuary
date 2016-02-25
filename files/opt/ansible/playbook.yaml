@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - vpc_create
+  tags:
+    - vpc

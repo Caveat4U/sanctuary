@@ -1,40 +1,49 @@
 ---
 - name: Create / Ensure ec2 key
   ec2_key:
-    name: {{ vpc_key_name }}
+    name: "{{ vpc_key_name }}"
+    region: "{{ vpc_region }}"
 
-- name:
+- name: Create VPC
   local_action:
     module: ec2_vpc
-    region: "{{ region }}"
+    region: "{{ vpc_region }}"
     cidr_block: "{{ vpc_ip_root }}.0.0/16"
-    resource_tags:
-      Name: {{ vpc_name }}
+    resource_tags: { "Name":"Sanctuary" }
+    subnets:
+      - cidr: "{{ vpc_ip_root }}.{{ az0_subnet_range}}/24"
+        az: "{{ vpc_az0 }}"
+        resource_tags: { "Name": "Sanctuary" }
+      - cidr: "{{ vpc_ip_root }}.{{ az1_subnet_range}}/24"
+        az: "{{ vpc_az1 }}"
+        resource_tags: { "Name": "Sanctuary" }
     internet_gateway: yes
   register: vpc
 
-- name: Create subnet in {{ vpc_az1 }} for sanctuary hosts
+- name: "Create subnet for {{ vpc_az0 }}"
   ec2_vpc_subnet:
     state: present
+    region: "{{ vpc_region }}"
     vpc_id: "{{ vpc.vpc_id }}"
-    cidr: "{{ vpc_ip_root }}.{{ az1_subnet_range}}/16"
+    cidr: "{{ vpc_ip_root }}.{{ az0_subnet_range}}/24"
     resource_tags:
       Name: Sanctuary
-  register: sanctuary_az1
+  register: az0_subnet
 
-- name: Create subnet in {{ vpc_az2 }} for sanctuary hosts
+- name: "Create subnet for {{ vpc_az1 }}"
   ec2_vpc_subnet:
     state: present
+    region: "{{ vpc_region }}"
     vpc_id: "{{ vpc.vpc_id }}"
-    cidr: "{{ vpc_ip_root }}.{{ az2_subnet_range}}/16"
+    cidr: "{{ vpc_ip_root }}.{{ az1_subnet_range}}/24"
     resource_tags:
       Name: Sanctuary
-  register: sanctuary_az2
+  register: az1_subnet
 
 - name: Create a empty security group
   local_action:
     module: ec2_group
-    region: "{{ region }}"
+    region: "{{ vpc_region }}"
     vpc_id: "{{ vpc.vpc_id }}"
     name: "{{ vpc_sg_name }}"
     description: "{{ vpc_sg_name }}"
@@ -49,3 +58,49 @@
         cidr_ip: 0.0.0.0/0
   register: sanctuary_sg
 
+- name: "Create launch config"
+  ec2_lc:
+    name: "{{ vpc_name }}"
+    region: "{{ vpc_region }}"
+    image_id: "{{ vpc_sanctuary_ami }}"
+    instance_type: "{{ vpc_sanctuary_instance_size }}"
+    key_name: "{{ vpc_key_name }}"
+    security_groups: "{{ sanctuary_sg.group_id }}"
+  register: sanctuary_lc
+
+- name: Configure Elastic Load Balancer
+  ec2_elb_lb:
+    name: "{{ vpc_name }}-elb"
+    region: "{{ vpc_region }}"
+    state: present
+    subnets:
+      - "{{ az0_subnet.subnet.id }}"
+      - "{{ az1_subnet.subnet.id }}"
+    listeners:
+      - protocol: tcp
+        load_balancer_port: 8200
+        instance_port: 8200
+    health_check:
+        ping_protocol: tcp # options are http, https, ssl, tcp
+        ping_port: 8200
+        response_timeout: 5 # seconds
+        interval: 300 # seconds
+        unhealthy_threshold: 2
+        healthy_threshold: 2
+  register: elb_result
+
+- name: "Create auto-scaling group"
+  ec2_asg:
+    name: "{{ vpc_name }}"
+    region: "{{ vpc_region }}"
+    launch_config_name: "{{ vpc_sg_name }}"
+    health_check_period: 60
+    health_check_type: ELB
+    min_size: 2
+    max_size: 2
+    wait_for_instances: no
+    desired_capacity: 2
+    vpc_zone_identifier:
+      - "{{ az0_subnet.subnet.id }}"
+      - "{{ az1_subnet.subnet.id }}"
+    load_balancers: "{{ vpc_name }}-elb"
