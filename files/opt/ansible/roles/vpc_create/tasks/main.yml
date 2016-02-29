@@ -19,19 +19,19 @@
     region: "{{ vpc_region }}"
     cidr_block: "{{ vpc_ip_root }}.0.0/16"
     resource_tags: { "Name":"Sanctuary" }
-    subnets:
-      - cidr: "{{ vpc_ip_root }}.{{ az0_subnet_range}}/24"
-        az: "{{ vpc_az0 }}"
-        resource_tags: { "Name": "Sanctuary" }
-      - cidr: "{{ vpc_ip_root }}.{{ az1_subnet_range}}/24"
-        az: "{{ vpc_az1 }}"
-        resource_tags: { "Name": "Sanctuary" }
-    internet_gateway: yes
   register: vpc
+
+- name: Create Internet gateway for VPC.
+  ec2_vpc_igw:
+    vpc_id: "{{ vpc.vpc_id }}"
+    region: "{{ vpc_region }}"
+    state: present
+  register: igw
 
 - name: "Create subnet for {{ vpc_az0 }}"
   ec2_vpc_subnet:
     state: present
+    az: "{{ vpc_az0 }}"
     region: "{{ vpc_region }}"
     vpc_id: "{{ vpc.vpc_id }}"
     cidr: "{{ vpc_ip_root }}.{{ az0_subnet_range}}/24"
@@ -42,12 +42,25 @@
 - name: "Create subnet for {{ vpc_az1 }}"
   ec2_vpc_subnet:
     state: present
+    az: "{{ vpc_az1 }}"
     region: "{{ vpc_region }}"
     vpc_id: "{{ vpc.vpc_id }}"
     cidr: "{{ vpc_ip_root }}.{{ az1_subnet_range}}/24"
     resource_tags:
       Name: Sanctuary
   register: az1_subnet
+
+- name: Setup route tables
+  ec2_vpc_route_table:
+    vpc_id: "{{ vpc.vpc_id }}"
+    region: "{{ vpc_region }}"
+    subnets:
+      - "{{ az0_subnet.subnet.cidr_block }}"
+      - "{{ az1_subnet.subnet.cidr_block }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw.gateway_id }}"
+  register: public_route_table
 
 - name: Create a empty security group
   local_action:
