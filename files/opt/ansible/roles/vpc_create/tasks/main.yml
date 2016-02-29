@@ -85,9 +85,11 @@
     name: "{{ vpc_name }}"
     region: "{{ vpc_region }}"
     image_id: "{{ vpc_sanctuary_ami }}"
+    assign_public_ip: yes
     instance_type: "{{ vpc_sanctuary_instance_size }}"
     key_name: "{{ vpc_key_name }}"
     security_groups: "{{ sanctuary_sg.group_id }}"
+    instance_profile_name: "sanctuary"
   register: sanctuary_lc
 
 - name: Configure Elastic Load Balancer
