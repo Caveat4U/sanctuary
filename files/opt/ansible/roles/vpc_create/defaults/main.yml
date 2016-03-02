@@ -1,12 +1,13 @@
 ---
-vpc_name: Sanctuary
-vpc_sg_name: Sanctuary
+vpc_name: sanctuary
+vpc_table_name: sanctuary
+vpc_sg_name: sanctuary
 vpc_region: us-west-2
 vpc_ip_root: 10.0
 vpc_az0: us-west-2a
 vpc_az1: us-west-2b
 vpc_sanctuary_ami: ami-3b14370b
-vpc_sanctuary_instance_size: t2.micro
+vpc_sanctuary_instance_size: t2.small
 vpc_key_name: sanctuary_deployer
 az0_subnet_range: 1.0
 az1_subnet_range: 2.0
