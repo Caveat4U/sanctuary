@@ -89,7 +89,8 @@
     instance_type: "{{ vpc_sanctuary_instance_size }}"
     key_name: "{{ vpc_key_name }}"
     security_groups: "{{ sanctuary_sg.group_id }}"
-    instance_profile_name: "sanctuary"
+    instance_profile_name: "{{ iam_role_name }}"
+    user_data: "{{ lookup('template', 'templates/startup.sh.j2') }}"
   register: sanctuary_lc
 
 - name: Configure Elastic Load Balancer
@@ -97,6 +98,7 @@
     name: "{{ vpc_name }}-elb"
     region: "{{ vpc_region }}"
     state: present
+    security_group_ids: "{{ sanctuary_sg.group_id }}"
     subnets:
       - "{{ az0_subnet.subnet.id }}"
       - "{{ az1_subnet.subnet.id }}"
