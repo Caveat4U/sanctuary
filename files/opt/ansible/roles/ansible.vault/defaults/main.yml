@@ -5,4 +5,6 @@ vault_version: 0.5.1
 vault_sha256sum: 7319b6514cb5ca735d9886d7b7e1ed8730ee38b238bb1626564436b824206d12
 letsencrypt_version: 0.4.1
 letsencrypt_sha256sum: 750c4a2966ec21009e4f7d510eceb3f97f941f6c19eda8b58b7030ef8518cef9
+vpc_region: us-west-2
+
 

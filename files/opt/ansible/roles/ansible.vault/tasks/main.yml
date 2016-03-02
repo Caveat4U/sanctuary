@@ -4,8 +4,11 @@
 - name: Updates apt cache
   apt: update_cache=true
 
-- name: ensure unzip exists
-  apt: name=unzip state=present
+- name: ensure prereqs exists
+  apt: name={{ item }} state=present
+  with_items:
+   - supervisor
+   - unzip
 
 - name: Download vault client
   get_url: >
@@ -32,3 +35,17 @@
 - name: Move LE to /opt
   command: "mv /tmp/letsencrypt-{{ letsencrypt_version }} /opt/letsencrypt"
   when: le_stat.stat.exists
+
+- name: ceate supervisord dir
+  file: path=/etc/supervisor/conf.d state=directory mode=0755
+
+- name: copy supervisor conf for vault
+  copy: src=vault_runner.conf dest=/etc/supervisor/conf.d/vault_runner.conf mode=0644
+
+- name: register ip
+  uri: url=http://169.254.169.254/latest/meta-data/public-ipv4/
+  register: public_ip
+
+- name: credentials
+  uri: url=http://169.254.169.254/latest/meta-data/iam/security-credentials/sanctuary
+  register: credentials
