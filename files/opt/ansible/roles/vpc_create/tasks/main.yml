@@ -18,7 +18,7 @@
     module: ec2_vpc
     region: "{{ vpc_region }}"
     cidr_block: "{{ vpc_ip_root }}.0.0/16"
-    resource_tags: { "Name":"Sanctuary" }
+    resource_tags: { "Name":"{{ vpc_name }}" }
   register: vpc
 
 - name: Create Internet gateway for VPC.
@@ -36,7 +36,7 @@
     vpc_id: "{{ vpc.vpc_id }}"
     cidr: "{{ vpc_ip_root }}.{{ az0_subnet_range}}/24"
     resource_tags:
-      Name: Sanctuary
+      Name: "{{ vpc_name }}"
   register: az0_subnet
 
 - name: "Create subnet for {{ vpc_az1 }}"
@@ -47,7 +47,7 @@
     vpc_id: "{{ vpc.vpc_id }}"
     cidr: "{{ vpc_ip_root }}.{{ az1_subnet_range}}/24"
     resource_tags:
-      Name: Sanctuary
+      Name: "{{ vpc_name }}"
   register: az1_subnet
 
 - name: Setup route tables
