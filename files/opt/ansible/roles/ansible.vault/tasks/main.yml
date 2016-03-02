@@ -15,3 +15,14 @@
 
 - name: add vault binary to /usr/bin
   unarchive: src=/tmp/vault.zip dest=/usr/bin copy=no
+
+- name: download lets encrypt source
+  get_url: >
+    url="https://github.com/letsencrypt/letsencrypt/archive/v{{ letsencrypt_version }}.tar.gz"
+    dest=/tmp/letsencrypt.tar.gz
+    sha256sum={{ letsencrypt_sha256sum }}
+
+- file: path=/tmp/letsencrypt state=directory mode=0755
+
+- name: add vault binary to /usr/bin
+  unarchive: src=/tmp/letsencrypt.tar.gz dest=/tmp/letsencrypt creates=yes copy=no
