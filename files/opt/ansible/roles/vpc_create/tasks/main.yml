@@ -132,3 +132,11 @@
       - "{{ az0_subnet.subnet.id }}"
       - "{{ az1_subnet.subnet.id }}"
     load_balancers: "{{ vpc_name }}-elb"
+
+- dynamodb_table:
+    name: "{{ vpc_table_name }}"
+    region: "{{ vpc_region }}"
+    hash_key_name: "path"
+    read_capacity: 10
+    write_capacity: 10
+
