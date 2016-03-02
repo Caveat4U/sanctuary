@@ -1,0 +1,17 @@
+---
+# tasks file for ansible.vault
+
+- name: Updates apt cache
+  apt: update_cache=true
+
+- name: ensure unzip exists
+  apt: name=unzip state=present
+
+- name: Download vault client
+  get_url: >
+    url="https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip"
+    dest=/tmp/vault.zip
+    sha256sum={{ vault_sha256sum }}
+
+- name: add vault binary to /usr/bin
+  unarchive: src=/tmp/vault.zip dest=/usr/bin copy=no
