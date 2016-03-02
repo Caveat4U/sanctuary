@@ -9,7 +9,7 @@
 - name: Create IAM policy
   iam_policy:
     iam_type: role
-    iam_name: "{{ iam_user_name }}"
+    iam_name: "{{ iam_role_name }}"
     policy_name: "sanctuary_fullaccess_iam"
     state: present
     policy_json: "{{ lookup( 'template', 'dynamodb_policy.json.j2') }}"
