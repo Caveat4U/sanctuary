@@ -1,10 +1,20 @@
 ---
+# @todo: need to ensure this sorts by latest first.
+- name: Look up sanctuary AMI.
+  ec2_ami_find:
+    owner: self
+    region: "{{ vpc_region }}"
+    ami_tags:
+      Name: sanctuary
+    no_result_action: fail
+
+  register: ami_find
 
 - name: "Create launch config"
   ec2_lc:
     name: "{{ vpc_name }}"
     region: "{{ vpc_region }}"
-    image_id: "{{ sanctuary_ami }}"
+    image_id: "{{ ami_find.results[0].ami_id }}"
     assign_public_ip: yes
     instance_type: "{{ vpc_sanctuary_instance_size }}"
     key_name: "{{ vpc_key_name }}"
