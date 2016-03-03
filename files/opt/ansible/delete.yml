@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+    - vpc_delete
+  tags:
+    - delete
