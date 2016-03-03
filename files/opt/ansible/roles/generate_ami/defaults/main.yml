@@ -1,0 +1,4 @@
+---
+base_sanctuary_deploy_key: sanctuar_ami_deployer
+base_sanctuary_ami: ami-3b14370b
+base_sanctuary_instance_size: t2.small

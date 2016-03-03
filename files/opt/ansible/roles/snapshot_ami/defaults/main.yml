@@ -1,0 +1,3 @@
+---
+snapshot_ami_name: sanctuary-ami
+snapshot_ami_shutdown_instance: true
