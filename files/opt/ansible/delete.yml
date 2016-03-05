@@ -1,6 +1,8 @@
 ---
 - hosts: all
+  vars:
+    - action: delete
   roles:
-    - vpc_delete
+    - vpc
   tags:
     - delete

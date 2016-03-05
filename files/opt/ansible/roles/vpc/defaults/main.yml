@@ -10,3 +10,4 @@ vpc_sanctuary_instance_size: t2.small
 vpc_key_name: sanctuary_deployer
 az0_subnet_range: 1.0
 az1_subnet_range: 2.0
+action: create
