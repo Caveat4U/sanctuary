@@ -3,6 +3,7 @@
   vars:
     - action: delete
   roles:
+    - vault_hosts
     - vpc
   tags:
     - delete
