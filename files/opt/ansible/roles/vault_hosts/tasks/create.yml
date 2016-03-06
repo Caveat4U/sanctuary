@@ -2,7 +2,7 @@
 # @todo: need to ensure this sorts by latest first.
 - name: Look up sanctuary AMI.
   ec2_ami_find:
-    owner: self
+    owner: "{{ sanctuary_ami_owner }}"
     region: "{{ vpc_region }}"
     ami_tags:
       Name: sanctuary
