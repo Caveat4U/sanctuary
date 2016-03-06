@@ -3,6 +3,7 @@
   vars:
     - action: create
   roles:
+    - deploy_key
     - iam
     - vpc
     - vault_hosts

@@ -6,5 +6,6 @@
     - vault_hosts
     - vpc
     - iam
+    - deploy_key
   tags:
     - delete
