@@ -1,8 +1,11 @@
 ---
 - hosts: all
+  vars:
+    - action: create
   roles:
     - vpc
-    - generate_ami
+    - ami_host
     - snapshot_ami
+    - { role: ami_host, action: delete }
   tags:
     - ami

@@ -1,0 +1,8 @@
+---
+- name: Shutdown instance
+  ec2:
+    instance_ids:
+      - "{{ item.id }}"
+    region: "{{ vpc_region }}"
+    state: absent
+  with_items: ami_instance.instances

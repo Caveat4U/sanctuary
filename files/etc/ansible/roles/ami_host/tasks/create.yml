@@ -2,16 +2,16 @@
 
 - name: Create / Ensure ec2 key
   ec2_key:
-    name: "{{ base_sanctuary_deploy_key }}"
+    name: "{{ ami_host_deploy_key }}"
     region: "{{ vpc_region }}"
   register: deployer
 
 
 - name: "Create an instance to run ansible against and snapshot"
   ec2:
-    key_name: "{{ base_sanctuary_deploy_key }}"
-    instance_type: "{{ base_sanctuary_instance_size }}"
-    image: "{{ base_sanctuary_ami }}"
+    key_name: "{{ ami_host_deploy_key }}"
+    instance_type: "{{ ami_host_instance_size }}"
+    image: "{{ ami_host_ami }}"
     wait: yes
     group: "{{ vpc_sg_name }}"
     vpc_subnet_id: "{{ az0_subnet.subnet.id }}"
