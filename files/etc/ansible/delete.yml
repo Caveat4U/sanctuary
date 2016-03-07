@@ -1,6 +1,11 @@
 ---
 - hosts: all
+  vars:
+    - action: delete
   roles:
-    - vpc_delete
+    - vault_hosts
+    - vpc
+    - iam
+    - deploy_key
   tags:
     - delete

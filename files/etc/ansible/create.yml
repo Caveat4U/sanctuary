@@ -1,8 +1,11 @@
 ---
 - hosts: all
+  vars:
+    - action: create
   roles:
+    - deploy_key
     - iam
-    - vpc_create
+    - vpc
     - vault_hosts
   tags:
     - vpc
