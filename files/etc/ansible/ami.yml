@@ -1,10 +1,25 @@
 ---
-- hosts: all
+- hosts: localhost
   vars:
     - action: create
   roles:
     - vpc
     - ami_host
+  tags:
+    - ami
+
+- hosts: vaults
+  sudo: yes
+  user: ubuntu
+  roles:
+    - vault
+  tags:
+    - ami
+
+- hosts: localhost
+  vars:
+    - action: create
+  roles:
     - snapshot_ami
     - { role: ami_host, action: delete }
   tags:
