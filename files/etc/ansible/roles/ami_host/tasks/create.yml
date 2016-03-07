@@ -6,6 +6,13 @@
     region: "{{ vpc_region }}"
   register: deployer
 
+- name: write deploy key
+  local_action: copy content="{{ deployer.key.private_key }}" dest=/etc/ansible/private_key
+  when: deployer.changed
+
+- name: chmod deploy key
+  local_action: file path=/etc/ansible/private_key mode=0400
+  when: deployer.changed
 
 - name: "Create an instance to run ansible against and snapshot"
   ec2:
@@ -21,4 +28,10 @@
     region: "{{ vpc_region }}"
   register: ami_instance
 
+- name: Add new instance to host group
+  add_host: hostname={{ item.public_ip }} groupname=vaults
+  with_items: ami_instance.instances
 
+- name: Wait for SSH to come up
+  wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+  with_items: ami_instance.instances
