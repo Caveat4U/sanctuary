@@ -1,5 +1,5 @@
 ---
-- name: Create IAM policy
+- name: Delete IAM policy
   iam_policy:
     iam_type: role
     iam_name: "{{ iam_role_name }}"
@@ -7,7 +7,7 @@
     state: absent
     policy_json: "{{ lookup( 'template', 'dynamodb_policy.json.j2') }}"
 
-- name: Create IAM user
+- name: Delete IAM user
   iam:
     iam_type: role
     name: "{{ iam_role_name }}"
