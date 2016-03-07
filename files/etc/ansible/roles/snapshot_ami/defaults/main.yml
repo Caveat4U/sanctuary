@@ -1,3 +1,2 @@
 ---
-snapshot_ami_name: sanctuary-ami
-snapshot_ami_shutdown_instance: true
+snapshot_ami_name: "sanctuary {{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"

@@ -1,7 +1,7 @@
 ---
 - hosts: all
   roles:
-    - vpc_create
+    - vpc
     - generate_ami
     - snapshot_ami
   tags:

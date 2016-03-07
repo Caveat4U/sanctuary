@@ -2,7 +2,6 @@
 - name: Snapshot the running instance
   ec2_ami:
     instance_id: "{{ ami_instance.instances[0].id }}"
-    region:
     wait: yes
     name: "{{ snapshot_ami_name }}"
     region: "{{ vpc_region }}"
@@ -10,12 +9,3 @@
       Name: sanctuary
       Service: vault
   register: ami
-
-- name: Shutdown instance
-  ec2:
-    instance_ids:
-      - "{{ ami_instance.instances[0].id }}"
-    region: "{{ vpc_region }}"
-    state: absent
-  when: snapshot_ami_shutdown_instance
-
