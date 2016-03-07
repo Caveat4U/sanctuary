@@ -1,6 +1,5 @@
 ---
-
-- name: Create IAM user
+- name: Create IAM role
   iam:
     iam_type: role
     name: "{{ iam_role_name }}"
