@@ -1,8 +1,0 @@
----
-- hosts: all
-  roles:
-    - iam
-    - vpc_create
-    - vault_hosts
-  tags:
-    - vpc
