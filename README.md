@@ -1,6 +1,8 @@
 # Sanctuary
 
-[![license-MIT-blue]]
+![license-MIT-blue](https://img.shields.io/badge/license-MIT-blue.svg)
+
+
 
 NOTE: This project is still a work-in-progress.
 
