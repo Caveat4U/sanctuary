@@ -4,6 +4,8 @@ import os
 import subprocess
 import click
 import shlex
+import yaml
+import boto.ec2
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -28,13 +30,8 @@ def build():
 def delete():
     run_playbook('delete')
 
-@santcuary.command()
-def config():
-    pass
-
-
 def run_playbook(playbook):
-    run_command = "ansible-playbook /etc/ansible/{playbook}.yml -i 'localhost,' -c local".format(playbook=playbook)
+    run_command = "ansible-playbook /app/{playbook}.yml -i 'localhost,' -c local".format(playbook=playbook)
     subprocess.call(shlex.split(run_command), env=os.environ.copy())
 
 
