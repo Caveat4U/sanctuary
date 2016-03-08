@@ -34,7 +34,7 @@ def config():
 
 
 def run_playbook(playbook):
-    run_command = "ansible-playbook /etc/ansible/{playbook}.yml -i 'localhost,' -c local -vvvv".format(playbook=playbook)
+    run_command = "ansible-playbook /etc/ansible/{playbook}.yml -i 'localhost,' -c local".format(playbook=playbook)
     subprocess.call(shlex.split(run_command), env=os.environ.copy())
 
 
