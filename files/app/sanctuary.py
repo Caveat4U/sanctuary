@@ -3,7 +3,9 @@
 import os
 import subprocess
 import click
-
+import shlex
+import yaml
+import boto.ec2
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -16,17 +18,23 @@ def sanctuary():
 
 @sanctuary.command()
 def generate_ami():
-    pass
+    run_playbook('ami')
 
 
 @sanctuary.command()
 def build():
-    pass
+    run_playbook('create')
 
 
 @sanctuary.command()
 def delete():
-    pass
+    run_playbook('delete')
+
+def run_playbook(playbook):
+    run_command = "ansible-playbook /app/{playbook}.yml -i 'localhost,' -c local".format(playbook=playbook)
+    subprocess.call(shlex.split(run_command), env=os.environ.copy())
+
 
 if __name__ == '__main__':
     sanctuary()
+
