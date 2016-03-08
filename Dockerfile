@@ -12,3 +12,4 @@ RUN apt-get update -y \
   && pip install --upgrade pip \
   && pip install $(cat /pip-requirements.txt)
 
+WORKDIR /home/ubuntu
