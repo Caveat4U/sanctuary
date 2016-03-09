@@ -6,3 +6,10 @@
     region: "{{ vpc_region }}"
     state: absent
   with_items: ami_instance.instances
+
+- name: Create / Ensure ec2 key
+  ec2_key:
+    name: "{{ ami_host_deploy_key }}"
+    region: "{{ vpc_region }}"
+    state: absent
+  register: deployer

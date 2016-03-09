@@ -1,2 +1,2 @@
 ---
-snapshot_ami_name: "sanctuary {{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+snapshot_ami_name: "sanctuary {{ ansible_date_time.epoch }}"

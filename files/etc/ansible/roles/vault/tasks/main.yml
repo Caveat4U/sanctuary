@@ -41,3 +41,7 @@
 
 - name: copy supervisor conf for vault
   copy: src=vault_runner.conf dest=/etc/supervisor/conf.d/vault_runner.conf mode=0644
+
+- name: copy upstart conf for vault
+  copy: src=vault.conf dest=/etc/init/vault.conf mode=0644
+
