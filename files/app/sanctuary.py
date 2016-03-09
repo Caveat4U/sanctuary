@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import subprocess
 import click
 import shlex
@@ -31,8 +32,8 @@ def build():
 @sanctuary.command()
 def create():
     """Build the AMI and create the Vault service."""
-    generate_ami()
-    build()
+    run_playbook('ami')
+    run_playbook('create')
 
 
 @sanctuary.command()
