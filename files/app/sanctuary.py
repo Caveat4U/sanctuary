@@ -41,8 +41,7 @@ def delete():
     run_playbook('delete')
 
 def run_playbook(playbook):
-    run_command = "ansible-playbook /app/{playbook}.yml -i 'localhost,' -c local".format(playbook=playbook)
-    #subprocess.call(shlex.split(run_command), env=os.environ.copy())
+    run_command = "ansible-playbook /app/{playbook}.yml".format(playbook=playbook)
     sub_process = subprocess.Popen(
         run_command,
         close_fds=True,
@@ -56,6 +55,7 @@ def run_playbook(playbook):
         out = sub_process.stdout.read(1)
         sys.stdout.write(out)
         sys.stdout.flush()
+
 
     if sub_process.returncode:
         sys.exit(1)

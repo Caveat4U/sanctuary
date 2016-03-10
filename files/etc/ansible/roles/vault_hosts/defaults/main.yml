@@ -1,3 +1,3 @@
 ---
-sanctuary_instance_size: t2.small
+sanctuary_instance_size: t2.micro
 sanctuary_ami_owner: self

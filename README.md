@@ -27,8 +27,5 @@ docker run --rm drud/sanctuary ansible -i 127.0.0.1, -m ping all --connection=lo
 ## Run
 
 ```
-docker run --rm \
--e AWS_ACCESS_KEY_ID="aws access key" \
--e AWS_SECRET_ACCESS_KEY="aws secret key" \
-drud/sanctuary
+docker run -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"  -i --rm drud/sanctuary [options]
 ```

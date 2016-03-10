@@ -14,14 +14,19 @@
   local_action: file path=/etc/ansible/private_key mode=0400
   when: deployer.changed
 
+- name: Find the latest Ubuntu AMI
+  ec2_ami_search: "distro=ubuntu release=trusty region={{ vpc_region }}
+store=ebs-ssd virt=hvm"
+  register: ubuntu_image
+
 - name: "Create an instance to run ansible against and snapshot"
   ec2:
     key_name: "{{ ami_host_deploy_key }}"
     instance_type: "{{ ami_host_instance_size }}"
-    image: "{{ ami_host_ami }}"
+    image: "{{ ubuntu_image.ami }}"
     wait: yes
     group: "{{ vpc_sg_name }}"
-    vpc_subnet_id: "{{ az0_subnet.subnet.id }}"
+    vpc_subnet_id: "{{ vpc.subnets[0].id }}"
     instance_tags:
         Name: "sanctuary-ami-builder"
     assign_public_ip: yes
@@ -30,8 +35,8 @@
 
 - name: Add new instance to host group
   add_host: hostname={{ item.public_ip }} groupname=vaults
-  with_items: ami_instance.instances
+  with_items: "{{ ami_instance.instances }}"
 
 - name: Wait for SSH to come up
   wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
-  with_items: ami_instance.instances
+  with_items: "{{ ami_instance.instances }}"

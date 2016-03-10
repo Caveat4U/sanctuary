@@ -1,10 +1,10 @@
 ---
-- hosts: all
+- hosts: localhost
   vars:
     - action: create
   roles:
-    - deploy_key
     - iam
+    - deploy_key
     - vpc
     - vault_hosts
   tags:

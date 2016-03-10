@@ -5,6 +5,7 @@
     wait: yes
     name: "{{ snapshot_ami_name }}"
     region: "{{ vpc_region }}"
+    state: present
     tags:
       Name: sanctuary
       Service: vault
