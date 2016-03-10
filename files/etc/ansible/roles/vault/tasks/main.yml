@@ -7,7 +7,6 @@
 - name: ensure prereqs exists
   apt: name={{ item }} state=present
   with_items:
-   - supervisor
    - unzip
 
 - name: Download vault client
@@ -36,11 +35,11 @@
   command: "mv /tmp/letsencrypt-{{ letsencrypt_version }} /opt/letsencrypt"
   when: le_stat.stat.exists
 
-- name: ceate supervisord dir
-  file: path=/etc/supervisor/conf.d state=directory mode=0755
+- name: ceate vault config dir
+  file: path=/etc/vault state=directory mode=0755
 
-- name: copy supervisor conf for vault
-  copy: src=vault_runner.conf dest=/etc/supervisor/conf.d/vault_runner.conf mode=0644
+- name: copy run vault bash script
+  template: src=templates/run_vault.sh.j2 dest=/usr/bin/run_vault.sh mode=0755
 
 - name: copy upstart conf for vault
   copy: src=vault.conf dest=/etc/init/vault.conf mode=0644
