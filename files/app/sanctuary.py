@@ -41,7 +41,7 @@ def delete():
     run_playbook('delete')
 
 def run_playbook(playbook):
-    run_command = "ansible-playbook /app/{playbook}.yml -i 'localhost,' -c local".format(playbook=playbook)
+    run_command = "ansible-playbook /app/{playbook}.yml".format(playbook=playbook)
     sub_process = subprocess.Popen(
         run_command,
         close_fds=True,
