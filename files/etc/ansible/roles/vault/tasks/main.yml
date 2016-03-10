@@ -35,12 +35,14 @@
   command: "mv /tmp/letsencrypt-{{ letsencrypt_version }} /opt/letsencrypt"
   when: le_stat.stat.exists
 
-- name: ceate vault config dir
+- name: create vault config dir
   file: path=/etc/vault state=directory mode=0755
+
+- name: copy default certs into vault ami
+  copy: src=/etc/certs dest=/etc/certs directory_mode=yes
 
 - name: copy run vault bash script
   template: src=templates/run_vault.sh.j2 dest=/usr/bin/run_vault.sh mode=0755
 
 - name: copy upstart conf for vault
   copy: src=vault.conf dest=/etc/init/vault.conf mode=0644
-

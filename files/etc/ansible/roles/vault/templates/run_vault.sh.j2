@@ -18,7 +18,8 @@ backend "dynamodb" {
 
 listener "tcp" {
   address = "0.0.0.0:8200"
-  tls_disable = 1
+  tls_cert_file = "/etc/certs/server.crt"
+  tls_key_file = "/etc/certs/server.key"
 }
 EOF
 
