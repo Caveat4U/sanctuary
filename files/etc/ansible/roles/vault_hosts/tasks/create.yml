@@ -62,11 +62,3 @@
       - "{{ vpc.subnets[0].id }}"
       - "{{ vpc.subnets[1].id }}"
     load_balancers: "{{ vpc_name }}-elb"
-
-- name: Create DynamoDB Table
-  dynamodb_table:
-    name: "{{ vpc_table_name }}"
-    region: "{{ vpc_region }}"
-    hash_key_name: "path"
-    read_capacity: 10
-    write_capacity: 10
