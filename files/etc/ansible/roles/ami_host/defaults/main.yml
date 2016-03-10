@@ -1,4 +1,3 @@
 ---
 ami_host_deploy_key: sanctuary_ami_deployer
-ami_host_ami: ami-3b14370b
-ami_host_instance_size: t2.small
+ami_host_instance_size: t2.micro

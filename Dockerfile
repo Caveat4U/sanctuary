@@ -6,8 +6,8 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV ANSIBLE_HOST_KEY_CHECKING False
 ENV ANSIBLE_FORCE_COLOR True
 
-COPY files/apt-requirements.txt /
-COPY files/pip-requirements.txt /
+COPY apt-requirements.txt /
+COPY pip-requirements.txt /
 
 RUN apt-get update -y \
   && apt-get install -y -q $(cat /apt-requirements.txt) \
