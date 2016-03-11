@@ -1,19 +1,5 @@
 ---
 
-- name: Create / Ensure ec2 key
-  ec2_key:
-    name: "{{ ami_host_deploy_key }}"
-    region: "{{ vpc_region }}"
-  register: deployer
-
-- name: write deploy key
-  local_action: copy content="{{ deployer.key.private_key }}" dest=/etc/ansible/private_key
-  when: deployer.changed
-
-- name: chmod deploy key
-  local_action: file path=/etc/ansible/private_key mode=0400
-  when: deployer.changed
-
 - name: Find the latest Ubuntu AMI
   ec2_ami_search: "distro=ubuntu release=trusty region={{ vpc_region }}
 store=ebs-ssd virt=hvm"
@@ -21,7 +7,7 @@ store=ebs-ssd virt=hvm"
 
 - name: "Create an instance to run ansible against and snapshot"
   ec2:
-    key_name: "{{ ami_host_deploy_key }}"
+    key_name: "{{ vpc_key_name }}"
     instance_type: "{{ ami_host_instance_size }}"
     image: "{{ ubuntu_image.ami }}"
     wait: yes

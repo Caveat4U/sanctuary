@@ -1,15 +1,12 @@
 ---
-
 - name: Create / Ensure ec2 key
   ec2_key:
     name: "{{ vpc_key_name }}"
     region: "{{ vpc_region }}"
+    key_material: "{{ item }}"
   register: deployer
+  with_file: /keys/deployer.key.pub
 
-- name: Generated Deployment key
-  debug: var=deployer.key.private_key
-  when: deployer.changed
-
-- name: save deploy key
-  pause: prompt="The previous key was generated as an AWS deployment key. Sanctuary does not back up this information, so it would be wise to save a copy. Press enter to continue once you are finished."
+- name: chmod deploy key
+  local_action: file path=/keys/deployer.key mode=0400
   when: deployer.changed
