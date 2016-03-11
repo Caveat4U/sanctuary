@@ -6,6 +6,7 @@ import subprocess
 import click
 import shlex
 import yaml
+import time
 import boto.ec2
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
@@ -28,12 +29,26 @@ def build():
     """Uses the vault AMI to build out an HA Vault service."""
     run_playbook('create')
 
+@sanctuary.command()
+def configure():
+    """
+    Configure sanctuary once the VPC has been created.
+    """
+    run_playbook('configure')
+    with open('/app/init.txt', 'rb') as file_contents:
+        click.secho("Attempted to init vault. Sanctuary does not save these results.", fg="green")
+        click.echo(file_contents.read())
 
 @sanctuary.command()
-def create():
+@click.pass_context
+def create(ctx):
     """Build the AMI and create the Vault service."""
     run_playbook('ami')
     run_playbook('create')
+    # @todo wait-loop this.
+    click.secho("Sleeping for 120 seconds to let auto scaling instances start.")
+    time.sleep(120)
+    ctx.invoke(configure)
 
 
 @sanctuary.command()
