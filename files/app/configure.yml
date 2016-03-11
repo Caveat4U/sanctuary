@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
   roles:
-    - init_vaults
+    - init_vault
   tags:
     - vpc
 
