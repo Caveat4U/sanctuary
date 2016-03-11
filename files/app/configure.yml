@@ -1,12 +1,7 @@
 ---
 - hosts: localhost
   roles:
-    - find_vaults
+    - init_vaults
   tags:
     - vpc
 
-- hosts: vaults
-  roles:
-    - vault_init
-  tags:
-    - vpc
