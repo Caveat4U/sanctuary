@@ -10,6 +10,12 @@ Sanctuary is a turn-key solution for establishing a production Vault service in 
 
 ## Build
 
+#### Generate AWS Deploy keys
+```
+./keygen.sh
+```
+
+#### Build Container
 ```
 docker build -t drud/sancutary .
 ```
