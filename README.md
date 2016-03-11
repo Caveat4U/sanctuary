@@ -32,3 +32,19 @@ docker run \
   -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"  \
   -i --rm drud/sanctuary [options]
 ```
+
+## Interact
+
+```
+docker run -it --entrypoint=sh drud/vault
+export VAULT_ADDR=http://ip_or_dns_for_vault:8200
+vault status -tls-skip-verify
+Sealed: true
+Key Shares: 5
+Key Threshold: 3
+Unseal Progress: 0
+
+High-Availability Enabled: true
+	Mode: sealed
+
+```
