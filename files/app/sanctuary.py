@@ -40,7 +40,7 @@ def configure():
     run_playbook('configure')
     with open('/app/init.txt', 'rb') as file_contents:
         click.secho("Attempted to init vault. Sanctuary does not save these results.", fg="red")
-        contents = file_contents.read();
+        contents = file_contents.read()
         click.secho(contents, fg="green")
         if "Vault initialized" in contents:
             click.secho("Vault was initialized, but has not yet been unsealed or had a backend configured. We can unseal it and configure an auth backend now if you like. If you choose not to unseal now, you will be responsible for all further configuration.", fg="yellow")
