@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  roles:
+    - unseal_vaults
+  tags:
+    - unseal
