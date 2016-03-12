@@ -38,9 +38,6 @@
 - name: create vault config dir
   file: path=/etc/vault state=directory mode=0755
 
-- name: copy default certs into vault ami
-  copy: src=/etc/certs dest=/etc/
-
 - name: copy run vault bash script
   template: src=templates/run_vault.sh.j2 dest=/usr/bin/run_vault.sh mode=0755
 

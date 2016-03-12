@@ -1,0 +1,17 @@
+---
+  - name: Ensure OpenSSL is installed
+    apt: name=openssl state=present
+
+  - name: Ensure ssl folder exist
+    file:
+      path: "/etc/certs"
+      state: directory
+
+  - name: Generate RSA key
+    command: openssl genrsa -out {{ ssl_certs_privkey_path }} 1024 creates={{ ssl_certs_privkey_path }}
+
+  - name: Generate CSR
+    command: openssl req -new -subj "{{ ssl_certs_fields }}" -key {{ ssl_certs_privkey_path }} -out {{ ssl_certs_csr_path }} creates={{ ssl_certs_csr_path }}
+
+  - name: Generate self-signed SSL certificate
+    command: openssl req -nodes -x509 -days {{ ssl_certs_days }} -in {{ ssl_certs_csr_path }} -key {{ ssl_certs_privkey_path }} -out {{ ssl_certs_cert_path }} -extensions v3_ca creates={{ ssl_certs_cert_path }}
