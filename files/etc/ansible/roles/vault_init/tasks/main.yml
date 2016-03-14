@@ -1,0 +1,7 @@
+---
+
+- shell: "vault init --address=http://{{ vaults.instances[0].public_dns_name }}:8200 --tls-skip-verify"
+  register: vault_init
+  run_once: True
+
+- debug: var=vault_init

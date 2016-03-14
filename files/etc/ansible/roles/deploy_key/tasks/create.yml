@@ -1,12 +1,14 @@
 ---
 - name: Create / Ensure ec2 key
   ec2_key:
-    name: "{{ vpc_key_name }}"
+    name: "{{ ami_host_deploy_key }}"
     region: "{{ vpc_region }}"
-    key_material: "{{ item }}"
   register: deployer
-  with_file: /keys/deployer.key.pub
+
+- name: write deploy key
+  local_action: copy content="{{ deployer.key.private_key }}" dest=/etc/ansible/private_key
+  when: deployer.changed
 
 - name: chmod deploy key
-  local_action: file path=/keys/deployer.key mode=0400
+  local_action: file path=/etc/ansible/private_key mode=0400
   when: deployer.changed

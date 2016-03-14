@@ -8,7 +8,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV ANSIBLE_HOST_KEY_CHECKING False
 ENV ANSIBLE_FORCE_COLOR True
 
-COPY keys /keys
 COPY apt-requirements.txt /
 COPY pip-requirements.txt /
 ADD https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip /tmp/vault.zip
