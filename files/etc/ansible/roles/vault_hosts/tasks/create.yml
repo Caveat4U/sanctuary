@@ -57,7 +57,7 @@
     wait_for_instances: no
     desired_capacity: 2
     tags:
-      - Name: "{{ vpc_name }}-host"
+      - Name: "{{ vpc_sanctuary_instance_name }}"
     vpc_zone_identifier:
       - "{{ vpc.subnets[0].id }}"
       - "{{ vpc.subnets[1].id }}"

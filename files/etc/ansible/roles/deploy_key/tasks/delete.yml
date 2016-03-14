@@ -3,3 +3,4 @@
   ec2_key:
     name: "{{ vpc_key_name }}"
     region: "{{ vpc_region }}"
+    state: absent
