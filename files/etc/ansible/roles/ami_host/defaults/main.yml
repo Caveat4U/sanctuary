@@ -1,3 +1,2 @@
 ---
-ami_host_deploy_key: sanctuary_deployer
 ami_host_instance_size: t2.micro

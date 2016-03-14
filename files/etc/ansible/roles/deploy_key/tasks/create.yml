@@ -1,7 +1,7 @@
 ---
 - name: Create / Ensure ec2 key
   ec2_key:
-    name: "{{ ami_host_deploy_key }}"
+    name: "{{ vpc_key_name }}"
     region: "{{ vpc_region }}"
   register: deployer
 
