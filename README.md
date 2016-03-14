@@ -33,6 +33,17 @@ docker run \
   -i --rm drud/sanctuary [options]
 ```
 
+This will come complete with some self-signed certs.  If you have your own certs they should be mounted into /etc/certs/{server.key,server.pem}.
+
+This can be done like so:
+
+```
+docker run \
+  -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+  -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"  \
+  -i --rm -v /path/to/certs:/etc/certs drud/sanctuary [options]
+```
+
 ## Interact
 
 ```
