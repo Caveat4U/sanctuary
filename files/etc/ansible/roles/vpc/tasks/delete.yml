@@ -59,4 +59,5 @@
     vpc_id: "{{ vpc.vpc_id }}"
     region: "{{ vpc_region }}"
     resource_tags: { "Name":"{{ vpc_name }}" }
+    state: absent
   register: vpc
