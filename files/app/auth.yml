@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  roles:
+    - github_auth
+  tags:
+    - auth
