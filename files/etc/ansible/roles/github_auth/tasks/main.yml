@@ -2,7 +2,7 @@
 - name: Include generated keys
   include_vars: "keys.yml"
 
-- name: Include generated keys
+- name: Include github org and team names
   include_vars: "github.yml"
 
 - ec2_remote_facts:
