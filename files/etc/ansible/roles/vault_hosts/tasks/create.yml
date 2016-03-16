@@ -13,7 +13,6 @@ store=ebs-ssd virt=hvm"
     wait: yes
     group: "{{ vpc_sg_name }}"
     count: 1
-    instance_profile_name: "{{ iam_role_name }}"
     vpc_subnet_id: "{{ vpc.subnets[0].id }}"
     assign_public_ip: yes
     instance_tags:

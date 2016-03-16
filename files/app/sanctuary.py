@@ -94,7 +94,6 @@ def auth():
 def create(ctx):
     """Build the AMI and create the Vault service."""
     run_playbook('create')
-    # @todo wait-loop this.
     click.secho("Sleeping for 20 seconds to let vault start.")
     time.sleep(20)
     ctx.invoke(configure)

@@ -1,15 +1,15 @@
 ---
 - name: Delete IAM policy
   iam_policy:
-    iam_type: role
-    iam_name: "{{ iam_role_name }}"
+    iam_type: user
+    iam_name: "{{ iam_user_name }}"
     policy_name: "sanctuary_fullaccess_iam"
     state: absent
     policy_json: "{{ lookup( 'template', 'dynamodb_policy.json.j2') }}"
 
 - name: Delete IAM user
   iam:
-    iam_type: role
-    name: "{{ iam_role_name }}"
+    iam_type: user
+    name: "{{ iam_user_name }}"
     state: absent
 
