@@ -43,3 +43,6 @@
 
 - name: copy upstart conf for vault
   copy: src=vault.conf dest=/etc/init/vault.conf mode=0644
+
+- name: start vault service
+  service: name=vault state=started
