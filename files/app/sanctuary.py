@@ -35,13 +35,14 @@ def build():
     run_playbook('create')
 
 
-def configure(organization, team):
+@sanctuary.command()
+def configure():
     """
     Configure sanctuary once the VPC has been created.
     """
     run_playbook('configure')
     with open('/app/init.txt', 'rb') as file_contents:
-        click.secho("Attempted to init vault. Sanctuary does not save these results.", fg="red")
+        click.secho("Attempted to init vault. Sanctuary does not save these results.", fg="green")
         contents = file_contents.read()
         click.secho(contents, fg="green")
         if "Vault initialized" in contents:
@@ -49,6 +50,8 @@ def configure(organization, team):
             click.confirm("Would you like to unseal your vault now?", abort=True)
             file_contents.seek(0, 0)
             lines = file_contents.readlines()
+
+            # Parse the keys and root token out of the initialization text.
             keys = [key.split(':')[1].strip() for key in lines if 'Key' in key]
             token = [token.split(':')[1].strip() for token in lines if "Initial Root Token" in token]
             config = {
@@ -61,38 +64,42 @@ def configure(organization, team):
 
             run_playbook('unseal')
 
-            if organization and team:
-                click.secho("Configuring github authentication.", fg="green")
 
-                github = {
-                    'github_org': organization,
-                    'github_team': team,
-                }
-                with open('/app/github.yml', 'w') as github_yml:
-                    github_yml.write(yaml.dump(github, default_flow_style=False))
-                    github_yml.flush()
+@sanctuary.command()
+def auth():
+    """Configure github as an auth backend"""
+    # We can only do this if we have the root key, so ensure
+    # we have the keys.yml file.
+    if os.path.isfile("/app/keys.yml"):
+        click.confirm("Would you like to configure github as an auth backend?", abort=True)
+        organization = click.prompt('GitHub organization name')
+        team = click.prompt('Team name to assign root permissions for')
 
-                run_playbook('auth')
+        if organization and team:
+            click.secho("Configuring github authentication.", fg="green")
+
+            github = {
+                'github_org': organization,
+                'github_team': team,
+            }
+            with open('/app/github.yml', 'w') as github_yml:
+                github_yml.write(yaml.dump(github, default_flow_style=False))
+                github_yml.flush()
+
+            run_playbook('auth')
 
 
 @sanctuary.command()
-@click.option(
-    "--organization",
-    prompt="Github organization name"
-)
-@click.option(
-    "--team",
-    prompt="A team in that organization to give root level privileges to"
-)
 @click.pass_context
-def create(ctx, organization, team):
+def create(ctx):
     """Build the AMI and create the Vault service."""
-    run_playbook('ami')
+    #run_playbook('ami')
     run_playbook('create')
     # @todo wait-loop this.
-    click.secho("Sleeping for 120 seconds to let auto scaling instances start.")
+    click.secho("Sleeping for 120 seconds to let instances start.")
     time.sleep(120)
-    configure(organization, team)
+    ctx.invoke(configure)
+    ctx.invoke(auth)
 
 
 @sanctuary.command()
