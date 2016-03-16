@@ -3,10 +3,11 @@
 ![license-MIT-blue](https://img.shields.io/badge/license-MIT-blue.svg)
 
 
-
 NOTE: This project is still a work-in-progress.
 
 Sanctuary is a turn-key solution for establishing a production Vault service in the Cloud.
+
+![sanctuary-vpc-diagram](img/sanctuary.png)
 
 ## Build
 
