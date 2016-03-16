@@ -9,3 +9,12 @@
     - vault_hosts
   tags:
     - vpc
+
+- hosts: vaults
+  sudo: yes
+  user: ubuntu
+  roles:
+    - ssl-certs
+    - vault
+  tags:
+    - vaults
