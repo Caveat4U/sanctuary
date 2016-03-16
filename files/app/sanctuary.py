@@ -27,10 +27,13 @@ def generate_ami():
     run_playbook('ami')
 
 
+
+
 @sanctuary.command()
 def build():
     """Uses the vault AMI to build out an HA Vault service."""
     run_playbook('create')
+
 
 @sanctuary.command()
 def configure():
@@ -39,7 +42,7 @@ def configure():
     """
     run_playbook('configure')
     with open('/app/init.txt', 'rb') as file_contents:
-        click.secho("Attempted to init vault. Sanctuary does not save these results.", fg="red")
+        click.secho("Attempted to init vault. Sanctuary does not save these results.", fg="green")
         contents = file_contents.read()
         click.secho(contents, fg="green")
         if "Vault initialized" in contents:
@@ -47,34 +50,62 @@ def configure():
             click.confirm("Would you like to unseal your vault now?", abort=True)
             file_contents.seek(0, 0)
             lines = file_contents.readlines()
+
+            # Parse the keys and root token out of the initialization text.
             keys = [key.split(':')[1].strip() for key in lines if 'Key' in key]
             token = [token.split(':')[1].strip() for token in lines if "Initial Root Token" in token]
             config = {
                 'vault_token': token[0],
                 'vault_keys': keys,
             }
-            with open('/app/keys.yml', 'w') as yaml_file:
-                yaml_file.write(yaml.dump(config, default_flow_style=False))
-                yaml_file.flush()
+            with open('/app/keys.yml', 'w') as yml_file:
+                yml_file.write(yaml.dump(config, default_flow_style=False))
+                yml_file.flush()
 
             run_playbook('unseal')
+
+
+@sanctuary.command()
+def auth():
+    """Configure github as an auth backend"""
+    # We can only do this if we have the root key, so ensure
+    # we have the keys.yml file.
+    if os.path.isfile("/app/keys.yml"):
+        click.confirm("Would you like to configure github as an auth backend?", abort=True)
+        organization = click.prompt('GitHub organization name')
+        team = click.prompt('Team name to assign root permissions for')
+
+        if organization and team:
+            click.secho("Configuring github authentication.", fg="green")
+
+            github = {
+                'github_org': organization,
+                'github_team': team,
+            }
+            with open('/app/github.yml', 'w') as github_yml:
+                github_yml.write(yaml.dump(github, default_flow_style=False))
+                github_yml.flush()
+
+            run_playbook('auth')
 
 
 @sanctuary.command()
 @click.pass_context
 def create(ctx):
     """Build the AMI and create the Vault service."""
-    run_playbook('ami')
+    #run_playbook('ami')
     run_playbook('create')
     # @todo wait-loop this.
-    click.secho("Sleeping for 120 seconds to let auto scaling instances start.")
+    click.secho("Sleeping for 120 seconds to let instances start.")
     time.sleep(120)
     ctx.invoke(configure)
+    ctx.invoke(auth)
 
 
 @sanctuary.command()
 def delete():
     run_playbook('delete')
+
 
 def run_playbook(playbook):
     run_command = "ansible-playbook /app/{playbook}.yml".format(playbook=playbook)

@@ -10,8 +10,7 @@
   register: vaults
 
 - name: Unseal vault
-  shell: "VAULT_TOKEN={{ vault_token }} vault unseal --address=http://{{ item[1].public_dns_name }}:8200 {{ item[0] }}"
-  register: wtf
+  shell: "VAULT_TOKEN={{ vault_token }} vault unseal --address={{ vpc_procotol }}://{{ item[1].public_dns_name }}:8200 --tls-skip-verify {{ item[0] }}"
   with_nested:
       - "{{ vault_keys }}"
       - "{{ vaults.instances }}"

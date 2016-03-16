@@ -5,9 +5,9 @@ vpc_sg_name: sanctuary
 vpc_region: us-west-2
 vpc_ip_root: 10.0
 vpc_az0: us-west-2a
-vpc_az1: us-west-2b
 vpc_sanctuary_instance_name: "{{ vpc_name }}-host"
 vpc_sanctuary_instance_size: t2.micro
 vpc_key_name: sanctuary_deployer
+vpc_procotol: https
 az0_subnet_range: 1.0
 az1_subnet_range: 2.0
