@@ -1,22 +1,15 @@
 ---
-# @todo: need to ensure this sorts by latest first.
-- name: Look up sanctuary AMI.
-  ec2_ami_find:
-    owner: "{{ sanctuary_ami_owner }}"
-    region: "{{ vpc_region }}"
-    sort: name
-    sort_order: descending
-    ami_tags:
-      Service: vault
-    no_result_action: fail
-  register: ami_find
+- name: Find the latest Ubuntu AMI
+  ec2_ami_search: "distro=ubuntu release=trusty region={{ vpc_region }}
+store=ebs-ssd virt=hvm"
+  register: ubuntu_image
 
 - name: Launch sanctuary instance.
   ec2:
     region: "{{ vpc_region }}"
     key_name: "{{ vpc_key_name }}"
     instance_type: "{{ vpc_sanctuary_instance_size }}"
-    image: "{{ ami_find.results[0].ami_id }}"
+    image: "{{ ubuntu_image.ami }}"
     wait: yes
     group: "{{ vpc_sg_name }}"
     count: 1
@@ -25,3 +18,12 @@
     assign_public_ip: yes
     instance_tags:
       Name: "{{ vpc_name }}-host"
+  register: vaults
+
+- name: Add new instance to host group
+  add_host: hostname={{ item.public_ip }} groupname=vaults
+  with_items: "{{ vaults.instances }}"
+
+- name: Wait for SSH to come up
+  wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+  with_items: "{{ vaults.instances }}"
