@@ -1,6 +1,0 @@
----
-- include: create.yml
-  when: action == 'create'
-
-- include: delete.yml
-  when: action == 'delete'

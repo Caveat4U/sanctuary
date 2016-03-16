@@ -1,2 +1,0 @@
----
-snapshot_ami_name: "sanctuary {{ ansible_date_time.epoch }}"
