@@ -11,13 +11,9 @@
         - cidr: "{{ vpc_ip_root }}.{{ az0_subnet_range}}/24"
           resource_tags: { "Name":"{{ vpc_name }}" }
           az: "{{ vpc_az0 }}"
-        - cidr: "{{ vpc_ip_root }}.{{ az1_subnet_range}}/24"
-          resource_tags: { "Name":"{{ vpc_name }}" }
-          az: "{{ vpc_az1 }}"
     route_tables:
         - subnets:
             - "{{ vpc_ip_root }}.{{ az0_subnet_range}}/24"
-            - "{{ vpc_ip_root }}.{{ az1_subnet_range}}/24"
           routes:
             - dest: 0.0.0.0/0
               gw: igw

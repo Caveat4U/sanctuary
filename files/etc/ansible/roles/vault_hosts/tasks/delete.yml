@@ -1,26 +1,15 @@
 ---
-- name: Remove Elastic Load Balancer
-  ec2_elb_lb:
-    name: "{{ vpc_name }}-elb"
+- ec2_remote_facts:
+    filters:
+      instance-state-name: running
+      "tag:Name": "{{ vpc_sanctuary_instance_name }}"
     region: "{{ vpc_region }}"
-    state: absent
-  register: elb_result
+  register: vaults
 
-- name: Remove auto-scaling group
-  ec2_asg:
-    name: "{{ vpc_name }}"
+- name: Remove instances
+  ec2:
     state: absent
+    wait: yes
     region: "{{ vpc_region }}"
-    launch_config_name: "{{ vpc_name }}"
-    wait_for_instances: true
-    tags:
-      - Name: "{{ vpc_name }}-host"
-
-- name: Remove launch config
-  ec2_lc:
-    name: "{{ vpc_name }}"
-    state: absent
-    region: "{{ vpc_region }}"
-    key_name: "{{ vpc_key_name }}"
-  register: sanctuary_lc
-
+    instance_id: "{{ item.id }}"
+  with_items: vaults.instances
