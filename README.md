@@ -58,7 +58,7 @@ docker run \
   -it --rm drud/sanctuary
 ```
 
-### Provided certificates.
+### Provide Certificates
 
 If you already have certificates generated for the vault domain you can mount them
 into the container and Sanctuary will use them when installing. If you have your own certs they should be mounted into /etc/certs/{server.key,server.pem}.
@@ -72,7 +72,7 @@ docker run \
   -it --rm -v /path/to/certs:/etc/certs drud/sanctuary
 ```
 
-### Self Signed Certificates
+### Self-Signed Certificates
 If you do not choose to provide your own certificates or use Let's Encrypt, then
 Sanctuary will generate it's own self signed certificates during the installation process.
 
