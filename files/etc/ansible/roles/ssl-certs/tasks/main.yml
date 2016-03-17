@@ -1,29 +1,69 @@
 ---
-  - name: Ensure OpenSSL is installed
-    apt: name=openssl state=present
+- name: Ensure OpenSSL is installed
+  apt: name=openssl state=present
 
-  - name: check for mounted in certs
-    stat: path=/etc/certs/server.pem
-    register: certfile
+- name: check for mounted in certs
+  stat: path=/etc/certs/server.pem
+  register: certfile
 
-  - debug: msg="{{ le_domain }}"
-  - debug: msg="{{ le_email }}"
-  - debug: msg="turtle snack"
-    when: le_domain != ''
+- debug: msg="{{ le_domain }}"
+- debug: msg="{{ le_email }}"
+- debug: msg="turtle snack"
+  when: le_domain != ''
 
-  - name: Ensure ssl folder exist
-    file:
-      path: "/etc/certs"
-      state: directory
+- name: Ensure ssl folder exist
+  file:
+    path: "/etc/certs"
+    state: directory
 
-  - name: Generate RSA key
-    command: openssl genrsa -out {{ ssl_certs_privkey_path }} 1024 creates={{ ssl_certs_privkey_path }}
-    when: certfile.stat.exists == False
+- name: Generate RSA key
+  command: openssl genrsa -out {{ ssl_certs_privkey_path }} 1024 creates={{ ssl_certs_privkey_path }}
+  when: certfile.stat.exists == False and le_domain == ''
 
-  - name: Generate CSR
-    command: openssl req -new -subj "{{ ssl_certs_fields }}" -key {{ ssl_certs_privkey_path }} -out {{ ssl_certs_csr_path }} creates={{ ssl_certs_csr_path }}
-    when: certfile.stat.exists == False
+- name: Generate CSR
+  command: openssl req -new -subj "{{ ssl_certs_fields }}" -key {{ ssl_certs_privkey_path }} -out {{ ssl_certs_csr_path }} creates={{ ssl_certs_csr_path }}
+  when: certfile.stat.exists == False and le_domain == ''
 
-  - name: Generate self-signed SSL certificate
-    command: openssl req -nodes -x509 -days {{ ssl_certs_days }} -in {{ ssl_certs_csr_path }} -key {{ ssl_certs_privkey_path }} -out {{ ssl_certs_cert_path }} -extensions v3_ca creates={{ ssl_certs_cert_path }}
-    when: certfile.stat.exists == False
+- name: Generate self-signed SSL certificate
+  command: openssl req -nodes -x509 -days {{ ssl_certs_days }} -in {{ ssl_certs_csr_path }} -key {{ ssl_certs_privkey_path }} -out {{ ssl_certs_cert_path }} -extensions v3_ca creates={{ ssl_certs_cert_path }}
+  when: certfile.stat.exists == False and le_domain == ''
+
+- name: download lets encrypt source
+  get_url: >
+    url="https://github.com/letsencrypt/letsencrypt/archive/v{{ letsencrypt_version }}.tar.gz"
+    dest=/tmp/letsencrypt.tar.gz
+    sha256sum={{ letsencrypt_sha256sum }}
+
+- name: extract letsencrypt to /mtp
+  unarchive: src=/tmp/letsencrypt.tar.gz dest=/tmp creates=yes copy=no
+
+- name: stat letsencrypt dir
+  stat: path="/tmp/letsencrypt-{{ letsencrypt_version }}"
+  register: le_stat
+
+- name: Move LE to /opt
+  command: "mv /tmp/letsencrypt-{{ letsencrypt_version }} /opt/letsencrypt"
+  when: le_stat.stat.exists
+
+- name: This is the public IP of the Vault instance
+  debug: var=groups['vaults'][0]
+  when: le_domain != ''
+
+- pause: prompt="Set your DNS to point to the ip listed above the press [ENTER]"
+  when: le_domain != ''
+
+- name: IF using LE wait for dns
+  wait_for: host=letest.drud.us port=22 delay=10 state=started timeout=300
+  when: le_domain != ''
+
+- name: init LE
+  command: "/opt/letsencrypt/letsencrypt-auto --staging --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly"
+  when: le_domain != ''
+
+- name: symlink LE cert
+  file: src="/etc/letsencrypt/live/{{ le_domain }}/fullchain.pem" dest=/etc/certs/server.pem state=link
+  when: le_domain != ''
+
+- name: symlink LE key
+  file: src="/etc/letsencrypt/live/{{ le_domain }}/privkey.pem" dest=/etc/certs/server.key state=link
+  when: le_domain != ''
