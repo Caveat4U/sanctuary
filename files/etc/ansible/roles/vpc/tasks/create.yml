@@ -27,6 +27,14 @@
     name: "{{ vpc_sg_name }}"
     description: "{{ vpc_sg_name }}"
     rules:
+      - proto: icmp
+        from_port: 8
+        to_port: 8
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
       - proto: tcp
         from_port: 8200
         to_port: 8200

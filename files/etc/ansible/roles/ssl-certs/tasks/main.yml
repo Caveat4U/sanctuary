@@ -6,6 +6,11 @@
     stat: path=/etc/certs/server.pem
     register: certfile
 
+  - debug: msg="{{ le_domain }}"
+  - debug: msg="{{ le_email }}"
+  - debug: msg="turtle snack"
+    when: le_domain != ''
+
   - name: Ensure ssl folder exist
     file:
       path: "/etc/certs"

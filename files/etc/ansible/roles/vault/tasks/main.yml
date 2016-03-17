@@ -44,5 +44,20 @@
 - name: copy upstart conf for vault
   copy: src=vault.conf dest=/etc/init/vault.conf mode=0644
 
+- name: This is the public IP of the Vault instance
+  debug: var=groups['vaults'][0]
+  when: le_domain != ''
+
+- pause: prompt="Set your DNS to point to the ip listed above the press [ENTER]"
+  when: le_domain != ''
+
+- name: IF using LE wait for dns
+  wait_for: host=letest.drud.us port=22 delay=10 state=started timeout=300
+  when: le_domain != ''
+
+- name: init LE
+  command: "/opt/letsencrypt/letsencrypt-auto --staging --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly"
+  when: le_domain != ''
+
 - name: start vault service
   service: name=vault state=started
