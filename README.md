@@ -7,7 +7,7 @@ NOTE: This project is still a work-in-progress.
 
 Sanctuary is a turn-key solution for establishing a production Vault service in the Cloud.
 
-![Sanctuary-vpc-diagram](img/Sanctuary.png)
+![Sanctuary-vpc-diagram](img/sanctuary.png)
 
 ## Build Container
 ```
