@@ -57,7 +57,7 @@
   when: le_domain != ''
 
 - name: init LE
-  command: "/opt/letsencrypt/letsencrypt-auto --staging --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly"
+  command: "/opt/letsencrypt/letsencrypt-auto --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly"
   when: le_domain != ''
 
 - name: symlink LE cert
@@ -72,5 +72,5 @@
   cron: >
         name="a job for cert renewal"
         special_time=monthly
-        job="/opt/letsencrypt/letsencrypt-auto --staging --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly"
+        job="/opt/letsencrypt/letsencrypt-auto --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly"
   when: le_domain != ''
