@@ -29,7 +29,7 @@
     rules:
       - proto: icmp
         from_port: 8
-        to_port: 8
+        to_port: 0
         cidr_ip: 0.0.0.0/0
       - proto: tcp
         from_port: 443
