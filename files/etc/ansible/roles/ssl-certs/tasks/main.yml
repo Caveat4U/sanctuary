@@ -67,3 +67,10 @@
 - name: symlink LE key
   file: src="/etc/letsencrypt/live/{{ le_domain }}/privkey.pem" dest=/etc/certs/server.key state=link
   when: le_domain != ''
+
+- name: create cron job for cert renewal
+  cron: >
+        name="a job for cert renewal"
+        special_time=monthly
+        job="/opt/letsencrypt/letsencrypt-auto --staging --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly"
+  when: le_domain != ''
