@@ -21,5 +21,6 @@ RUN  apt-get update -y \
 
 COPY files /
 
-ENTRYPOINT ["/usr/bin/python", "/app/sanctuary.py"]
+WORKDIR /app
+ENTRYPOINT ["/usr/bin/python", "sanctuary.py"]
 CMD ["create"]
