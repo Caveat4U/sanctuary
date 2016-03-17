@@ -51,6 +51,18 @@ docker run \
   -i --rm -v /path/to/certs:/etc/certs drud/sanctuary [options]
 ```
 
+To use Lets Encrypt:
+
+You will want to be ready to point the DNS for your domain to the vault instance when prompted.
+
+```
+docker run \
+  -e LE_EMAIL="your_email_address" -e LE_DOMAIN="your_domain" \
+  -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+  -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"  \
+  -i --rm drud/sanctuary [options]
+```
+
 ## Interact
 
 ```
