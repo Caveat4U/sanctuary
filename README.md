@@ -90,3 +90,16 @@ To do this, just provide the following environment variables to the container wh
   <dt>GITHUB_TEAM</dt>
   <dd>A team within that organization to give root level access to.</dd>
 </dl>
+
+# Vault Options
+To configure the nuber of keys generated and the key threshold for unsealing vault, you can
+include the following environment vars.
+
+To do this, just provide the following environment variables to the container when installing Sanctuary
+
+<dl>
+  <dt>VAULT_KEY_SHARES</dt>
+  <dd>The number of key shares to generate. Defaults to 5.</dd>
+  <dt>VAULT_KEY_THRESHOLD</dt>
+  <dd>The key threshold required to unseal vault. Defaults to 3.</dd>
+</dl>
