@@ -42,14 +42,9 @@ def configure():
     """
     run_playbook('configure')
     with open('/app/init.txt', 'rb') as file_contents:
-        click.secho("Attempted to init vault. Sanctuary does not save these results.", fg="green")
         contents = file_contents.read()
-        click.secho(contents, fg="green")
-        if "Vault initialized" in contents:
-            click.secho("Vault was initialized, but has not yet been unsealed or had a backend configured. We can unseal it and configure an auth backend now if you like. If you choose not to unseal now, you will be responsible for all further configuration.", fg="yellow")
-            click.confirm("Would you like to unseal your vault now?", abort=True)
-            file_contents.seek(0, 0)
-            lines = file_contents.readlines()
+        if "Vault initialized" in contents and not os.environ.get('UNSEAL_VAULT', '') == 'false':
+            lines = contents.splitlines()
 
             # Parse the keys and root token out of the initialization text.
             keys = [key.split(':')[1].strip() for key in lines if 'Key' in key]
@@ -71,16 +66,11 @@ def auth():
     # We can only do this if we have the root key, so ensure
     # we have the keys.yml file.
     if os.path.isfile("/app/keys.yml"):
-        click.confirm("Would you like to configure github as an auth backend?", abort=True)
-        organization = click.prompt('GitHub organization name')
-        team = click.prompt('Team name to assign root permissions for')
-
-        if organization and team:
-            click.secho("Configuring github authentication.", fg="green")
-
+        if os.environ.get('GITHUB_ORGANIZATION', False) and os.environ.get('GITHUB_TEAM', False):
+            click.secho("Configuring github authentication for organization: {org}".format(org=os.environ['GITHUB_ORGANIZATION']), fg="green")
             github = {
-                'github_org': organization,
-                'github_team': team,
+                'github_org': os.environ['GITHUB_ORGANIZATION'],
+                'github_team': os.environ['GITHUB_TEAM'],
             }
             with open('/app/github.yml', 'w') as github_yml:
                 github_yml.write(yaml.dump(github, default_flow_style=False))
@@ -95,11 +85,16 @@ def auth():
 def create(ctx, debug):
     """Build the AMI and create the Vault service."""
     run_playbook('create', debug)
-    # @todo wait-loop this.
     click.secho("Sleeping for 20 seconds to let vault start.")
     time.sleep(20)
     ctx.invoke(configure)
     ctx.invoke(auth)
+    if os.path.isfile("/app/init.txt"):
+        with open('/app/init.txt', 'rb') as file_contents:
+            click.secho("Installation complete.", fg="green")
+            contents = file_contents.read()
+            click.secho(contents, fg="green")
+            click.secho("It is your responsibility to save these keys!!", fg="yellow")
 
 
 @sanctuary.command()
