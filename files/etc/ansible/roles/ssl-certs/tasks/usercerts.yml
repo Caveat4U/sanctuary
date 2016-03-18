@@ -1,0 +1,27 @@
+- name: Check for server.crt
+  local_action: stat path=/etc/certs/server.pem
+  register: pem
+  ignore_errors: True
+
+- name: copy file if it exists
+  copy: src=/etc/certs/server.pem dest=/etc/certs/server.pem
+  when: pem.stat.exists
+
+
+- name: Check for server.crt
+  local_action: stat path=/etc/certs/server.crt
+  register: crt
+  ignore_errors: True
+
+- name: copy file if it exists
+  copy: src=/etc/certs/server.crt dest=/etc/certs/server.crt
+  when: crt.stat.exists
+
+- name: check for server.key
+  local_action: stat path=/etc/certs/server.key
+  register: key
+  ignore_errors: True
+
+- name: copy file if it exists
+  copy: src=/etc/certs/server.key dest=/etc/certs/server.key
+  when: key.stat.exists
