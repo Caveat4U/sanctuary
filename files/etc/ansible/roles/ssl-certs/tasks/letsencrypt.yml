@@ -1,0 +1,36 @@
+---
+
+- name: download lets encrypt source
+  get_url: >
+    url="https://github.com/letsencrypt/letsencrypt/archive/v{{ letsencrypt_version }}.tar.gz"
+    dest=/tmp/letsencrypt.tar.gz
+    sha256sum={{ letsencrypt_sha256sum }}
+
+- name: extract letsencrypt to /tmp
+  unarchive: src=/tmp/letsencrypt.tar.gz dest=/tmp creates=yes copy=no
+
+- name: Move LE to /opt
+  command: "mv /tmp/letsencrypt-{{ letsencrypt_version }} /opt/letsencrypt"
+
+- name: This is the public IP of the Vault instance
+  debug: msg="{{ groups['vaults'][0] }}"
+
+- pause: prompt="Set your DNS to point to the ip listed above the press [ENTER]"
+
+- name: IF using LE wait for dns
+  wait_for: host=letest.drud.us port=22 delay=10 state=started timeout=300
+
+- name: init LE
+  command: "/opt/letsencrypt/letsencrypt-auto --staging --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly"
+
+- name: symlink LE cert
+  file: src="/etc/letsencrypt/live/{{ le_domain }}/fullchain.pem" dest=/etc/certs/server.pem state=link
+
+- name: symlink LE key
+  file: src="/etc/letsencrypt/live/{{ le_domain }}/privkey.pem" dest=/etc/certs/server.key state=link
+
+- name: create cron job for cert renewal
+  cron: >
+        name="a job for cert renewal"
+        special_time=monthly
+        job="/opt/letsencrypt/letsencrypt-auto --staging --standalone --agree-tos --non-interactive -d {{ le_domain }} -m {{ le_email }} certonly && service vault reload"

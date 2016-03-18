@@ -81,9 +81,10 @@ def auth():
 
 @sanctuary.command()
 @click.pass_context
-def create(ctx):
+@click.option('--debug', is_flag=True)
+def create(ctx, debug):
     """Build the AMI and create the Vault service."""
-    run_playbook('create')
+    run_playbook('create', debug)
     click.secho("Sleeping for 20 seconds to let vault start.")
     time.sleep(20)
     ctx.invoke(configure)
@@ -101,10 +102,15 @@ def delete():
     run_playbook('delete')
 
 
-def run_playbook(playbook):
-    run_command = "ansible-playbook /app/{playbook}.yml".format(playbook=playbook)
+def run_playbook(playbook, debug=False):
+    run_command = ["ansible-playbook"]
+    # allow verbose output via --debug
+    if debug:
+        run_command.append("-vvv")
+    run_command.append("/app/{playbook}.yml".format(playbook=playbook))
+
     sub_process = subprocess.Popen(
-        run_command,
+        " ".join(run_command),
         close_fds=True,
         shell=True,
         stdout=subprocess.PIPE,

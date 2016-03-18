@@ -72,12 +72,7 @@ docker run \
   -it --rm -v /path/to/certs:/etc/certs drud/sanctuary
 ```
 
-### Self-Signed Certificates
-If you do not choose to provide your own certificates or use Let's Encrypt, then
-Sanctuary will generate it's own self signed certificates during the installation process.
-
 It is recommended that you use one of the other methods for a production deployment.
-
 
 # GitHub Authentication
 Sanctuary can automatically configure [GitHub authentication for vault](https://www.vaultproject.io/docs/auth/github.html).
