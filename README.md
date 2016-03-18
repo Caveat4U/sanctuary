@@ -92,7 +92,7 @@ To do this, just provide the following environment variables to the container wh
 </dl>
 
 # Vault Options
-To configure the nuber of keys generated and the key threshold for unsealing vault, you can
+To configure the number of keys generated and the key threshold for unsealing vault, you can
 include the following environment vars.
 
 To do this, just provide the following environment variables to the container when installing Sanctuary
