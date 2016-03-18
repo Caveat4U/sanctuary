@@ -1,19 +1,22 @@
 ---
-  
+
 - name: Ensure OpenSSL is installed
   apt: name=openssl state=present
 
-- name: check for mounted in certs
-  stat: path=/etc/certs/server.pem
-  register: certfile
+- name: Check for server.crt
+  local_action: stat path=/etc/certs/server.pem
+  register: pem
 
 - name: Ensure ssl folder exist
   file:
     path: "/etc/certs"
     state: directory
 
+- include: usercerts.yml
+  when: pem.stat.exists
+
 - include: selfsigned.yml
-  when: certfile.stat.exists == False and le_domain == ''
+  when: pem.stat.exists == False and le_domain == ''
 
 - include: letsencrypt.yml
-  when: certfile.stat.exists == False and le_domain != ''
+  when: pem.stat.exists == False and le_domain != ''
