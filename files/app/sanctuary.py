@@ -4,10 +4,8 @@ import os
 import sys
 import subprocess
 import click
-import shlex
 import yaml
 import time
-import boto.ec2
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -20,13 +18,16 @@ def get_config():
 def sanctuary():
     pass
 
+def write_conf(filename, config):
+    """
+    Convert a config to yaml and write to a target filename.
 
-@sanctuary.command()
-def generate_ami():
-    """Creates template AMI to be used in AWS auto-scaling groups."""
-    run_playbook('ami')
-
-
+    :param filename: The target filename.
+    :param config: The config to written.
+    """
+    with open(filename, 'w') as conf_file:
+        conf_file.write(yaml.dump(config, default_flow_style=False))
+        conf_file.flush()
 
 
 @sanctuary.command()
@@ -40,22 +41,43 @@ def configure():
     """
     Configure sanctuary once the VPC has been created.
     """
-    run_playbook('configure')
+    shares = int(os.environ.get('VAULT_KEY_SHARES', 5))
+    threshold = int(os.environ.get('VAULT_KEY_THRESHOLD', 3))
+
+    if threshold > shares:
+        click.secho("The vault key threshold is greater than the number of keys specified.")
+        sys.exit(1)
+
+    write_conf('/app/vault.yml', {
+        'vault_shares': shares,
+        'vault_threshold': threshold,
+    })
+    run_playbook('init')
+
     with open('/app/init.txt', 'rb') as file_contents:
         contents = file_contents.read()
-        if "Vault initialized" in contents and not os.environ.get('UNSEAL_VAULT', '') == 'false':
+        if "Vault initialized" in contents and not os.environ.get('SKIP_UNSEAL', False):
             lines = contents.splitlines()
 
             # Parse the keys and root token out of the initialization text.
-            keys = [key.split(':')[1].strip() for key in lines if 'Key' in key]
-            token = [token.split(':')[1].strip() for token in lines if "Initial Root Token" in token]
-            config = {
+            # All key lines are in the form of "Key X: <key>".
+            keys = [
+                key.split(':')[1].strip()
+                for key in lines
+                if 'Key' in key
+            ]
+
+            # The token is in the form of "Initial Root Token: <token>"
+            token = [
+                token.split(':')[1].strip()
+                for token in lines
+                if "Initial Root Token" in token
+            ]
+
+            write_conf('/app/keys.yml', {
                 'vault_token': token[0],
                 'vault_keys': keys,
-            }
-            with open('/app/keys.yml', 'w') as yml_file:
-                yml_file.write(yaml.dump(config, default_flow_style=False))
-                yml_file.flush()
+            })
 
             run_playbook('unseal')
 
@@ -64,17 +86,20 @@ def configure():
 def auth():
     """Configure github as an auth backend"""
     # We can only do this if we have the root key, so ensure
-    # we have the keys.yml file.
+    # we have the keys.yml file written by init.
     if os.path.isfile("/app/keys.yml"):
         if os.environ.get('GITHUB_ORGANIZATION', False) and os.environ.get('GITHUB_TEAM', False):
-            click.secho("Configuring github authentication for organization: {org}".format(org=os.environ['GITHUB_ORGANIZATION']), fg="green")
-            github = {
+            click.secho(
+                "Configuring github authentication for organization: {org}".format(
+                    org=os.environ['GITHUB_ORGANIZATION']
+                ),
+                fg="green"
+            )
+
+            write_conf('/app/github.yml', {
                 'github_org': os.environ['GITHUB_ORGANIZATION'],
                 'github_team': os.environ['GITHUB_TEAM'],
-            }
-            with open('/app/github.yml', 'w') as github_yml:
-                github_yml.write(yaml.dump(github, default_flow_style=False))
-                github_yml.flush()
+            })
 
             run_playbook('auth')
 
