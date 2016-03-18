@@ -6,7 +6,6 @@
 - name: Check for server.crt
   local_action: stat path=/etc/certs/server.pem
   register: pem
-  ignore_errors: True
 
 - name: Ensure ssl folder exist
   file:
