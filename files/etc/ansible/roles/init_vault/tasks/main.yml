@@ -7,7 +7,7 @@
   register: vaults
 
 - name: Initialize vault
-  shell: "vault init --address={{ vpc_procotol }}://{{ vaults.instances[0].public_dns_name }}:8200 --tls-skip-verify"
+  shell: "vault init --address={{ vpc_procotol }}://{{ vaults.instances[0].public_dns_name }}:8200 --key-shares={{ vault_shares }} --key-threshold={{ vault_threshold }} --tls-skip-verify"
   register: init
   ignore_errors: yes
 
