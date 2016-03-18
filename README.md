@@ -102,4 +102,7 @@ To do this, just provide the following environment variables to the container wh
   <dd>The number of key shares to generate. Defaults to 5.</dd>
   <dt>VAULT_KEY_THRESHOLD</dt>
   <dd>The key threshold required to unseal vault. Defaults to 3.</dd>
+  <dt>SKIP_UNSEAL</dt>
+  <dd>Set to any value if you want to leave vault sealed after installation completes. Sanctuary
+  will not be able to configure an auth backend for a sealed vault.</dd>
 </dl>
