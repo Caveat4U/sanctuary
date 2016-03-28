@@ -19,5 +19,6 @@
   roles:
     - ssl-certs
     - vault
+    - audit
   tags:
     - vaults

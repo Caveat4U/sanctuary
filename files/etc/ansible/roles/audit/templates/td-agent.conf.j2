@@ -1,0 +1,33 @@
+####
+## Output descriptions:
+##
+
+# Treasure Data (http://www.treasure-data.com/) provides cloud based data
+# analytics platform, which easily stores and processes data from td-agent.
+# FREE plan is also provided.
+# @see http://docs.fluentd.org/articles/http-to-td
+#
+
+<source>
+  @type tail
+  format json
+  path /var/log/vault_audit.log
+  pos_file /var/log/vault_audit.log.pos
+  tag s3.apache.access
+</source>
+
+<match s3.*.*>
+  @type s3
+
+  aws_key_id {{ hostvars['localhost'].iam_key.access_key_id }}
+  aws_sec_key {{ hostvars['localhost'].iam_key.secret_access_key }}
+  s3_bucket "{{ lookup('env', 'S3_ARCHIVE_BUCKET') }}"
+  path logs/
+  buffer_path /var/log/td-agent/s3
+
+  time_slice_format %Y%m%d%H
+  time_slice_wait 10m
+  utc
+
+  buffer_chunk_limit 256m
+</match>
