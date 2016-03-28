@@ -150,7 +150,7 @@ def run_playbook(playbook, debug=False):
 
 
     if sub_process.returncode:
-        print sub_process.stderr.read()
+        click.secho(sub_process.stderr.read(), fg="red")
         sys.exit(1)
 
 if __name__ == '__main__':
