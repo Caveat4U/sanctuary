@@ -150,6 +150,7 @@ def run_playbook(playbook, debug=False):
 
 
     if sub_process.returncode:
+        print sub_process.stderr.read()
         sys.exit(1)
 
 if __name__ == '__main__':
