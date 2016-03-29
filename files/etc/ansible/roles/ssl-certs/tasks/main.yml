@@ -16,7 +16,7 @@
   when: pem.stat.exists
 
 - include: selfsigned.yml
-  when: pem.stat.exists == False and le_domain == ''
+  when: pem.stat.exists == False and le_email == ''
 
 - include: letsencrypt.yml
-  when: pem.stat.exists == False and le_domain != ''
+  when: pem.stat.exists == False and le_email != ''

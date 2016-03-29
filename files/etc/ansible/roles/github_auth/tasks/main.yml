@@ -5,19 +5,12 @@
 - name: Include github org and team names
   include_vars: "github.yml"
 
-- ec2_remote_facts:
-    filters:
-      instance-state-name: running
-      "tag:Name": "{{ vpc_sanctuary_instance_name }}"
-    region: "{{ vpc_region }}"
-  register: vaults
 
 - name: Enable github auth backend
-  shell: "VAULT_TOKEN={{ vault_token }} vault auth-enable --address={{ vpc_procotol }}://{{ vaults.instances[0].public_dns_name }}:8200 --tls-skip-verify github"
+  shell: "VAULT_TOKEN={{ vault_token }} vault auth-enable --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} github"
 
 - name: Set organization
-  shell: "VAULT_TOKEN={{ vault_token }} vault write --address={{ vpc_procotol }}://{{ vaults.instances[0].public_dns_name }}:8200 --tls-skip-verify auth/github/config organization={{ github_org }}"
+  shell: "VAULT_TOKEN={{ vault_token }} vault write --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} auth/github/config organization={{ github_org }}"
 
 - name: Give a team root permissions
-  shell: "VAULT_TOKEN={{ vault_token }} vault write --address={{ vpc_procotol }}://{{ vaults.instances[0].public_dns_name }}:8200 --tls-skip-verify auth/github/map/teams/{{ github_team }} value=root"
-
+  shell: "VAULT_TOKEN={{ vault_token }} vault write --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} auth/github/map/teams/{{ github_team }} value=root"

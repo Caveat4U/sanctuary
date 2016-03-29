@@ -13,10 +13,12 @@ def get_config():
     with open('/app/group_vars/all') as configfile:
         return yaml.load(configfile)
 
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version='1.0.0')
 def sanctuary():
     pass
+
 
 def write_conf(filename, config):
     """

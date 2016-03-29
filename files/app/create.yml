@@ -14,10 +14,7 @@
   sudo: yes
   user: ubuntu
   vars:
-    le_domain: "{{ lookup('env', 'LE_DOMAIN') }}"
     le_email: "{{ lookup('env', 'LE_EMAIL') }}"
   roles:
     - ssl-certs
     - vault
-  tags:
-    - vaults
