@@ -14,7 +14,7 @@ backend "dynamodb" {
 }
 
 listener "tcp" {
-  address = "0.0.0.0:8200"
+  address = "0.0.0.0:{{ sanctuary_port }}"
   tls_cert_file = "/etc/certs/server.pem"
   tls_key_file = "/etc/certs/server.key"
 }
