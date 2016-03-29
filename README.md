@@ -37,13 +37,13 @@ With [let's encrypt](https://letsencrypt.org/) you are expected to provide the f
 during setup
 
 <dl>
-  <dt>LE_DOMAIN</dt>
+  <dt>SANCTUARY_HOSTNAME</dt>
   <dd>The domain to generate certificates for.</dd>
   <dt>LE_EMAIL</dt>
   <dd>The administrative email to use when generating certificates.</dd>
 </dl>
 
-As a part the installation you will be asked to point the DNS for the LE_DOMAIN you chose
+As a part the installation you will be asked to point the DNS for the SANCTUARY_HOSTNAME you chose
 at the Sanctuary instance once it is created.
 
 The following examples how show you would create a Sanctuary instance with let's encrypt
@@ -53,26 +53,39 @@ support.
 docker run \
   -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
   -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"  \
-  -e LE_DOMAIN="vault.example.com" \
+  -e SANCTUARY_HOSTNAME="sanctuary.example.com" \
   -e LE_EMAIL="admin@example.com" \
   -it --rm drud/sanctuary
 ```
 
 ### Provide Certificates
 
-If you already have certificates generated for the vault domain you can mount them
+If you already have certificates generated for the sanctuary domain you can mount them
 into the container and Sanctuary will use them when installing. If you have your own certs they should be mounted into /etc/certs/{server.key,server.pem}.
 
-This can be done like so:
+Just provide the SSL Certificates and the Sanctuary hostname when installing. This can be done like so:
 
 ```
 docker run \
   -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
   -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"  \
+  -e SANCTUARY_HOSTNAME="sanctuary.example.com" \
   -it --rm -v /path/to/certs:/etc/certs drud/sanctuary
 ```
 
-It is recommended that you use one of the other methods for a production deployment.
+
+### Generated Certificates
+
+Lastly, you can generate a sanctuary instance for development or testing purposes by generating self-signed certificates.
+
+```
+docker run \
+  -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+  -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"  \
+  -it --rm drud/sanctuary
+```
+
+It is highly recommended that you use one of the other methods for a production deployment.
 
 # GitHub Authentication
 Sanctuary can automatically configure [GitHub authentication for vault](https://www.vaultproject.io/docs/auth/github.html).
