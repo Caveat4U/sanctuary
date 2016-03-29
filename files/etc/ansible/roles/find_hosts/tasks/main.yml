@@ -1,0 +1,16 @@
+---
+- ec2_remote_facts:
+    filters:
+      instance-state-name: running
+      "tag:Name": "{{ vpc_sanctuary_instance_name }}"
+    region: "{{ vpc_region }}"
+  register: vaults
+
+- set_fact:
+    vault_cli_options: ''
+  when: sanctuary_hostname != ''
+
+- set_fact:
+    vault_cli_options: '--tls-skip-verify'
+    sanctuary_hostname: "{{ vaults.instances[0].public_dns_name }}"
+  when: sanctuary_hostname == ''
