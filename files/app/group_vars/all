@@ -17,3 +17,4 @@ sanctuary_port: 8200
 sanctuary_hostname: "{{ lookup('env', 'SANCTUARY_HOSTNAME') }}"
 sanctuary_instance_size: t2.micro
 sanctuary_instance_name: "{{ vpc_name }}-host"
+vault_user: vault
