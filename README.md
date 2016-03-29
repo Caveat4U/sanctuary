@@ -101,3 +101,14 @@ To do this, just provide the following environment variables to the container wh
   <dd>Set to any value if you want to leave vault sealed after installation completes. Sanctuary
   will not be able to configure an auth backend for a sealed vault.</dd>
 </dl>
+
+## Audit log shipping to S3
+
+To turn on audit logging and ship the logs to s3 provide the S3_AUDIT_BUCKET emv
+variable when you run the sanctuary install.
+
+Then after Vault has been initialized you should authenticate with vault and run:
+
+```
+vault audit-enable file path=/var/log/vault_audit.log
+```
