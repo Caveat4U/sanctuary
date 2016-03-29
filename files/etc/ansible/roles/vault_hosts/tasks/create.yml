@@ -8,7 +8,7 @@ store=ebs-ssd virt=hvm"
   ec2:
     region: "{{ vpc_region }}"
     key_name: "{{ vpc_key_name }}"
-    instance_type: "{{ vpc_sanctuary_instance_size }}"
+    instance_type: "{{ sanctuary_instance_size }}"
     image: "{{ ubuntu_image.ami }}"
     wait: yes
     group: "{{ vpc_sg_name }}"

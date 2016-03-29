@@ -1,7 +1,7 @@
 ---
 
 - name: Initialize vault
-  shell: "vault init --address={{ vpc_procotol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} --key-shares={{ vault_shares }} --key-threshold={{ vault_threshold }} {{ vault_cli_options }}"
+  shell: "vault init --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} --key-shares={{ vault_shares }} --key-threshold={{ vault_threshold }} {{ vault_cli_options }}"
   register: init
   ignore_errors: yes
 

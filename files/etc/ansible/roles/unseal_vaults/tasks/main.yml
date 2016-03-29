@@ -3,5 +3,5 @@
   include_vars: "keys.yml"
 
 - name: Unseal vault
-  shell: "VAULT_TOKEN={{ vault_token }} vault unseal --address={{ vpc_procotol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} {{ item }}"
+  shell: "VAULT_TOKEN={{ vault_token }} vault unseal --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} {{ item }}"
   with_items: "{{ vault_keys }}"
