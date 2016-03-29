@@ -1,36 +1,5 @@
 ---
 # tasks file for audit
 
-- name: install dependencies...
-  apt: name={{ item }} state=installed update_cache=yes
-  with_items:
-    - python-pycurl
-    - acl
-
-- name: Add the Treasuredata apt key
-  apt_key: url=http://packages.treasuredata.com/GPG-KEY-td-agent state=present
-
-- name: Add apt repository
-  apt_repository: repo='deb [arch=amd64] http://packages.treasuredata.com/2/ubuntu/trusty/ trusty contrib' state=present
-  when: ansible_distribution_version == '14.04'
-
-- name: Add apt repository
-  apt_repository: repo='deb [arch=amd64] http://packages.treasuredata.com/2/ubuntu/precise/ precise contrib' state=present
-  when: ansible_distribution_version == '12.04'
-
-- name: Add apt repository
-  apt_repository: repo='deb [arch=amd64] http://packages.treasuredata.com/2/ubuntu/lucid/ contrib' state=present
-  when: ansible_distribution_version == '10.04'
-
-- name: install td-agent
-  apt: name=td-agent state=installed update_cache=yes
-
-- user: name="td-agent" groups=syslog append=yes
-
-- name: push conf
-  template: src=templates/td-agent.conf.j2 dest=/etc/td-agent/td-agent.conf
-
-- lineinfile: dest=/etc/init.d/td-agent regexp=^TD_AGENT_USER= line=TD_AGENT_USER=root
-
-- name: restart td-agent
-  service: name=td-agent state=restarted enabled=yes
+- include: s3archive.yml
+  when: s3_bucket != ''
