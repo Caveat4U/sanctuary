@@ -18,8 +18,14 @@
 - name: add vault binary to /usr/bin
   unarchive: src=/tmp/vault.zip dest=/usr/bin copy=no
 
+- name: Allow mlock sycall
+  shell: sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
+
+- name: Create vault user.
+  user: name={{ vault_user }} state=present
+
 - name: create vault config dir
-  file: path=/etc/vault state=directory mode=0755
+  file: path=/etc/vault state=directory  owner={{ vault_user }} group={{ vault_user }} mode=0755
 
 - name: copy run vault bash script
   template: src=templates/run_vault.sh.j2 dest=/usr/bin/run_vault.sh mode=0755
