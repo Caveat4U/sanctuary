@@ -19,7 +19,7 @@
   unarchive: src=/tmp/vault.zip dest=/usr/bin copy=no
 
 - name: Allow mlock sycall
-  shell: sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
+  shell: setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
 
 - name: Create vault user.
   user: name={{ vault_user }} state=present
