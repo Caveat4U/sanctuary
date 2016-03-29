@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   roles:
+    - find_hosts
     - github_auth
   tags:
     - auth

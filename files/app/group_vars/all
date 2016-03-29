@@ -11,3 +11,6 @@ vpc_key_name: sanctuary_deployer
 vpc_procotol: https
 az0_subnet_range: 1.0
 az1_subnet_range: 2.0
+iam_user_name: sanctuary
+sanctuary_port: 8200
+sanctuary_hostname: "{{ lookup('env', 'SANCTUARY_HOSTNAME') }}"

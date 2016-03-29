@@ -3,6 +3,5 @@
   vars_files:
     - vault.yml
   roles:
+    - find_hosts
     - init_vault
-  tags:
-    - vpc
