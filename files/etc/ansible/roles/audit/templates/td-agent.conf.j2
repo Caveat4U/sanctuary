@@ -13,7 +13,7 @@
   format json
   path /var/log/vault_audit.log
   pos_file /var/log/vault_audit.log.pos
-  tag s3.apache.access
+  tag s3.vault.audit
 </source>
 
 <match s3.*.*>
@@ -21,7 +21,7 @@
 
   aws_key_id {{ hostvars['localhost'].iam_key.access_key_id }}
   aws_sec_key {{ hostvars['localhost'].iam_key.secret_access_key }}
-  s3_bucket "{{ lookup('env', 'S3_ARCHIVE_BUCKET') }}"
+  s3_bucket {{ s3_bucket }}
   path logs/
   buffer_path /var/log/td-agent/s3
 

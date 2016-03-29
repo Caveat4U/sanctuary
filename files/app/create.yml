@@ -16,6 +16,7 @@
   vars:
     le_domain: "{{ lookup('env', 'LE_DOMAIN') }}"
     le_email: "{{ lookup('env', 'LE_EMAIL') }}"
+    s3_bucket: "{{ lookup('env', 'S3_AUDIT_BUCKET') }}"
   roles:
     - ssl-certs
     - vault
