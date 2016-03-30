@@ -6,6 +6,12 @@
             "Effect": "Allow",
             "Action": ["dynamodb:*"],
             "Resource": ["*"]
+        },
+        {
+            "Sid": "FullSanctuaryBucketAccess",
+            "Effect": "Allow",
+            "Action": ["s3:*"],
+            "Resource": ["*"]
         }
     ]
 }

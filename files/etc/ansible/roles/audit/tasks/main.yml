@@ -1,0 +1,5 @@
+---
+# tasks file for audit
+
+- include: s3archive.yml
+  when: s3_bucket != ''

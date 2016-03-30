@@ -82,6 +82,8 @@ def configure():
             })
 
             run_playbook('unseal')
+    # enable audit backend
+    run_playbook('audit')
 
 
 @sanctuary.command()
@@ -152,7 +154,7 @@ def run_playbook(playbook, debug=False):
 
 
     if sub_process.returncode:
-        click.secho(sub_process.stderr.read(), fg="red")
+        print sub_process.stderr.read()
         sys.exit(1)
 
 if __name__ == '__main__':

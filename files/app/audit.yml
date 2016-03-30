@@ -1,0 +1,16 @@
+---
+
+- hosts: localhost
+  roles:
+    - find_hosts
+
+- hosts: localhost
+  tasks:
+
+    - name: Include generated keys
+      include_vars: "keys.yml"
+      when: lookup('env', 'S3_AUDIT_BUCKET') != ''
+
+    - name: Enable audit backend
+      shell: "VAULT_TOKEN={{ vault_token }} vault audit-enable --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} file path=/var/log/vault_audit.log"
+      when: lookup('env', 'S3_AUDIT_BUCKET') != ''
