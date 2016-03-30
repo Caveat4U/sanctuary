@@ -1,13 +1,7 @@
 ---
-- ec2_remote_facts:
-    filters:
-      instance-state-name: running
-      "tag:Name": "{{ vpc_sanctuary_instance_name }}"
-    region: "{{ vpc_region }}"
-  register: vaults
 
 - name: Initialize vault
-  shell: "vault init --address={{ vpc_procotol }}://{{ vaults.instances[0].public_dns_name }}:8200 --key-shares={{ vault_shares }} --key-threshold={{ vault_threshold }} --tls-skip-verify"
+  shell: "vault init --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} --key-shares={{ vault_shares }} --key-threshold={{ vault_threshold }} {{ vault_cli_options }}"
   register: init
   ignore_errors: yes
 

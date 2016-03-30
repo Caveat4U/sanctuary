@@ -2,15 +2,6 @@
 - name: Include generated keys
   include_vars: "keys.yml"
 
-- ec2_remote_facts:
-    filters:
-      instance-state-name: running
-      "tag:Name": "{{ vpc_sanctuary_instance_name }}"
-    region: "{{ vpc_region }}"
-  register: vaults
-
 - name: Unseal vault
-  shell: "VAULT_TOKEN={{ vault_token }} vault unseal --address={{ vpc_procotol }}://{{ item[1].public_dns_name }}:8200 --tls-skip-verify {{ item[0] }}"
-  with_nested:
-      - "{{ vault_keys }}"
-      - "{{ vaults.instances }}"
+  shell: "VAULT_TOKEN={{ vault_token }} vault unseal --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} {{ item }}"
+  with_items: "{{ vault_keys }}"

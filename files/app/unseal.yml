@@ -1,6 +1,5 @@
 ---
 - hosts: localhost
   roles:
+    - find_hosts
     - unseal_vaults
-  tags:
-    - unseal

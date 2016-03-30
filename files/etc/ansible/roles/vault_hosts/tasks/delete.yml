@@ -2,7 +2,7 @@
 - ec2_remote_facts:
     filters:
       instance-state-name: running
-      "tag:Name": "{{ vpc_sanctuary_instance_name }}"
+      "tag:Name": "{{ sanctuary_instance_name }}"
     region: "{{ vpc_region }}"
   register: vaults
 

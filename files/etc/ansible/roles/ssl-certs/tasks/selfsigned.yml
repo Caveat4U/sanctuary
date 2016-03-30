@@ -1,5 +1,4 @@
 ---
-
 - name: Generate RSA key
   command: openssl genrsa -out {{ ssl_certs_privkey_path }} 1024 creates={{ ssl_certs_privkey_path }}
 
