@@ -82,7 +82,7 @@ def configure():
             })
 
             run_playbook('unseal')
-
+    # enable audit backend
     run_playbook('audit')
 
 

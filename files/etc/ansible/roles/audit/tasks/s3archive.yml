@@ -2,10 +2,7 @@
 # tasks file for audit
 
 - name: install dependencies...
-  apt: name={{ item }} state=installed update_cache=yes
-  with_items:
-    - python-pycurl
-    - acl
+  apt: name=python-pycurl state=installed update_cache=yes
 
 - name: Add the Treasuredata apt key
   apt_key: url=http://packages.treasuredata.com/GPG-KEY-td-agent state=present
