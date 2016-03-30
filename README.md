@@ -117,7 +117,7 @@ To do this, just provide the following environment variables to the container wh
 
 ## Audit log shipping to S3
 
-To turn on audit logging and ship the logs to s3 provide the S3_AUDIT_BUCKET emv
+To turn on audit logging and ship the logs to s3 provide the S3_AUDIT_BUCKET environment
 variable when you run the sanctuary install.
 
 Then after Vault has been initialized you should authenticate with vault and run:
