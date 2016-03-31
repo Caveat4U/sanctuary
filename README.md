@@ -3,6 +3,8 @@
 ![license-MIT-blue](https://img.shields.io/badge/license-MIT-blue.svg)
 
 Sanctuary provides a turn-key deployment of Hashicorp Vault in a single command in under 5 minutes.
+
+
 [![asciicast](https://asciinema.org/a/8fj1sbhhnj7szngiy62yrmedb.png)](https://asciinema.org/a/8fj1sbhhnj7szngiy62yrmedb)
 
 
