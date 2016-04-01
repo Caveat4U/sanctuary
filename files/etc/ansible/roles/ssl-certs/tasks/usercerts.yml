@@ -26,4 +26,4 @@
 - name: This is the public IP of the Vault instance
   debug: msg="{{ groups['vaults'][0] }}"
 
-- pause: prompt="Set your DNS for {{ sanctuary_hostname }} to point to the ip listed above the press [ENTER]"
+- pause: prompt="Set your DNS for {{ sanctuary_hostname }} to point to the ip listed above and press [ENTER]"

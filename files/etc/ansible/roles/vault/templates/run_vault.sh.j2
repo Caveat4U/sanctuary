@@ -20,4 +20,8 @@ listener "tcp" {
 }
 EOF
 
+{% if le_email != '' and sanctuary_hostname != '' %}
+  sudo chown -R {{ vault_user }} /etc/letsencrypt/live /etc/letsencrypt/archive
+{% endif %}
+
 sudo -u {{ vault_user }} /usr/bin/vault server -config /etc/vault/vault.conf
