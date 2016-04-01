@@ -2,12 +2,11 @@
 
 ![license-MIT-blue](https://img.shields.io/badge/license-MIT-blue.svg)
 
+Sanctuary provides a turn-key deployment of Hashicorp Vault in a single command in under 5 minutes.
 
-NOTE: This project is still a work-in-progress.
 
-Sanctuary is a turn-key solution for establishing a production Vault service in the Cloud.
+[![asciicast](https://asciinema.org/a/8fj1sbhhnj7szngiy62yrmedb.png)](https://asciinema.org/a/8fj1sbhhnj7szngiy62yrmedb)
 
-![Sanctuary-vpc-diagram](img/sanctuary.png)
 
 ## Build Container
 ```
@@ -125,3 +124,9 @@ Then after Vault has been initialized you should authenticate with vault and run
 ```
 vault audit-enable file path=/var/log/vault_audit.log
 ```
+
+# Architecture
+
+The architecture of Sanctuary is very straightforward. Sanctuary ceates a VPC with a single subnet, and a Vault host within it.
+
+![Sanctuary-vpc-diagram](img/sanctuary.png)
