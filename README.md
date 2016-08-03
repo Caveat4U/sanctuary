@@ -96,6 +96,8 @@ To do this, just provide the following environment variables to the container wh
   <dd>The organization name a user must be a part of to authenticate.</dd>
   <dt>GITHUB_TEAM</dt>
   <dd>A team within that organization to give root level access to.</dd>
+  <dt>GITHUB_AUTH_TTL</dt>
+  <dd>Time until tokens expire. https://golang.org/pkg/time/#ParseDuration</dd>
 </dl>
 
 # Vault Options

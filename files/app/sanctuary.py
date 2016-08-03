@@ -100,10 +100,12 @@ def auth():
                 fg="green"
             )
 
-            write_conf('/app/github.yml', {
+            github_vars = {
                 'github_org': os.environ['GITHUB_ORGANIZATION'],
                 'github_team': os.environ['GITHUB_TEAM'],
-            })
+                'github_ttl': os.environ.get('GITHUB_AUTH_TTL', ''),
+            }
+            write_conf('/app/github.yml', github_vars)
 
             run_playbook('auth')
 

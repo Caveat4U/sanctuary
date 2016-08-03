@@ -11,6 +11,11 @@
 
 - name: Set organization
   shell: "VAULT_TOKEN={{ vault_token }} vault write --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} auth/github/config organization={{ github_org }}"
+  when: github_ttl == ''
+
+- name: Set organization
+  shell: "VAULT_TOKEN={{ vault_token }} vault write --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} auth/github/config organization={{ github_org }} ttl={{ github_ttl }}"
+  when: github_ttl != ''
 
 - name: Give a team root permissions
   shell: "VAULT_TOKEN={{ vault_token }} vault write --address={{ sanctuary_protocol }}://{{ sanctuary_hostname }}:{{ sanctuary_port }} {{ vault_cli_options }} auth/github/map/teams/{{ github_team }} value=root"
