@@ -10,7 +10,7 @@ backend "dynamodb" {
   table = "{{ vpc_table_name }}"
   access_key = "$ACCESS_KEY"
   secret_key = "$SECRET_KEY"
-  advertise_addr = "http://$PUBLIC_IP"
+  advertise_addr = "{{ sanctuary_protocol }}://$PUBLIC_IP"
 }
 
 listener "tcp" {
