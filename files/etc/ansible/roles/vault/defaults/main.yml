@@ -1,8 +1,8 @@
 ---
 # defaults file for ansible.vault
 
-vault_version: 0.5.2
-vault_sha256sum: 7517b21d2c709e661914fbae1f6bf3622d9347b0fe9fc3334d78a01d1e1b4ec2
+vault_version: 0.6.2
+vault_sha256sum: 91432c812b1264306f8d1ecf7dd237c3d7a8b2b6aebf4f887e487c4e7f69338c
 letsencrypt_version: 0.4.1
 letsencrypt_sha256sum: 750c4a2966ec21009e4f7d510eceb3f97f941f6c19eda8b58b7030ef8518cef9
 vpc_region: us-west-2

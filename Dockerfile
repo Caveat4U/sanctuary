@@ -2,8 +2,9 @@ FROM ubuntu:trusty
 
 MAINTAINER DRUD DOCKER <docker@drud.io>
 
-ENV VAULT_VERSION 0.6.0
-ENV VAULT_SHA256 283b4f591da8a4bf92067bf9ff5b70249f20705cc963bea96ecaf032911f27c2
+# This is only the client version. See the "vault" role in ansible for the server version.
+ENV VAULT_VERSION 0.6.2
+ENV VAULT_SHA256 91432c812b1264306f8d1ecf7dd237c3d7a8b2b6aebf4f887e487c4e7f69338c
 ENV DEBIAN_FRONTEND noninteractive
 ENV ANSIBLE_HOST_KEY_CHECKING False
 ENV ANSIBLE_FORCE_COLOR True
